@@ -1,14 +1,10 @@
 <Header class="ui teal inverted top app secondary menu">
   <div class="ui container">
-    <a class={item: true, active: this.tagName==menu.tag} href="{menu.href}" each={menu in this.leftMenus}
-    onclick={parent.clicked}>
+    <a class={item: true, active: this.tagName==menu.tag} href="{menu.href}" each={menu in this.leftMenus} onclick={parent.clicked}>
       <i class="{menu.icon} icon" if={menu.icon}></i>
     </a>
     <div class="right menu" if={this.rightMenus.length}>
-      <a class={item: true, active: this.tagName==menu.tag} 
-      href="{menu.href}"
-      onclick={menu.clicked}
-      each={menu in this.rightMenus}>
+      <a class={item: true, active: this.tagName==menu.tag} href="{menu.href}" onclick={menu.clicked} each={menu in this.rightMenus}>
         <i class="{menu.icon} icon" if={menu.icon}></i>
       </a>
     </div>
@@ -17,18 +13,13 @@
     <!--</a>-->
   </div>
   <script>
-    // RiotControl.on('title_changed',(title)=>{
-    //   this.title=title;
-    //   this.update();
-    // })
-    
-    this.on('update', () => {
-      this.createMenus();
-      // console.log(opts.curtag);
+    this.on('mount',()=>{
       this.tagName = opts.curtag;
-      // this.update();
-    });
-    clicked(e){
+      this.createMenus();
+      // console.log(cur)
+      this.update()
+    })
+    clicked(e) {
       // obs.trigger('animation-start');
       return true;
     };
@@ -45,7 +36,7 @@
         tag: 'calendar',
         href: '#/calendar',
         icon: 'calendar',
-        clicked:(e)=>{
+        clicked: (e) => {
           return true;
         }
       }];
@@ -55,8 +46,8 @@
         tag: 'setting',
         href: '#/setting',
         icon: 'settings',
-        clicked:(e)=>{
-          console.log(('setting selected!'))
+        clicked: (e) => {
+          obs.trigger('navigate-animation');
           return true;
         }
       }]

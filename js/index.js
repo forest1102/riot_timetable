@@ -1,53 +1,68 @@
-riot.tag2('app', '<modal></modal> <header curtag="{this.cur}"></Header> <route class="ui container app segment not-opacity" id="view"></route> <div class="modal-mount"></div>', '', 'class="app"', function(opts) {
-        riot.router.on('route:updated', (data) => {
-            this.cur = data.matches[1].tag;
-            riot.update();
+riot.tag2('app', '<modal></modal> <route1 class="not-opacity" id="view"></route1> <div id="animation"></div> <div class="modal-mount"></div>', '', 'class="app"', function(opts) {
+        var r = route.create();
+        r('', () => {
+            r('day/Mon')
         })
-        this.on('updated', function(e) {
+        r('/day', () => {
+            r('day/Mon')
 
+        })
+        r((cur, ...param) => {
+            var curTag = ($.inArray(cur, TAG) >= 0) ? cur : 'not-found';
+
+            if (!this.animation) {
+                var tags = riot.mount('#view', curTag, {
+                    param: param
+                })
+                this.update();
+            }
+            else {
+                this.animation=false;
+                setTimeout(() => {
+                    var tags = riot.mount('#view', curTag, {
+                        param: param
+                    })
+                    this.update();
+                }, 2000);
+            }
+
+        })
+        this.on('updated', function(e) {});
+
+        obs.on('navigate-animation', () => {
+
+            console.log('animation!!')
+            this.animation = true;
         });
 
-        obs.on('animation-start', () => {
-
-        })
-
-        riot.router.use((request, response, next) => {
-
-        })
 });
 
-riot.tag2('calendar', '', '', '', function(opts) {
+riot.tag2('calendar', '<header curtag="calendar"></Header> <div class="ui container app segment"> </div>', '', '', function(opts) {
         this.submit = function(e){
 
         }.bind(this)
 });
-riot.tag2('day', '<div class="ui top attached tabular menu"> <a class="{item:true, active: this.date==menu}" data-tab="{menu}" href="{\'#/day/\'+menu}" each="{menu,i in this.weeks}"> {menu} </a> </div> <route class="ui container app segment"></route>', 'day .column,[riot-tag="day"] .column,[data-is="day"] .column{ color: #000000; }', '', function(opts) {
+riot.tag2('day', '<header curtag="day"></Header> <div class="ui container app segment"> <div class="ui top attached tabular menu"> <a class="{item:true, active: this.date==menu}" data-tab="{menu}" href="{\'#/day/\'+menu}" each="{menu,i in this.weeks}"> {menu} </a> </div> <time-table class="ui container app segment" date="{this.date}"></time-table> </div>', 'day .column,[riot-tag="day"] .column,[data-is="day"] .column{ color: #000000; }', '', function(opts) {
         var sub = riot.route.create();
         this.weeks = WEEK;
-        this.on('mount',()=>{
-            this.date=riot.router.current.uri.split('/')[2];
-            this.update();
+        this.on('update', () => {
 
+            this.date = opts.param[0];
+            this.update()
         })
-        obs.on('dataChanged', function (data) {
+        obs.on('dataChanged', function(data) {
             var text = '';
-        })
-        sub('day/*', (date) => {
-            this.date = date;
-            this.update();
         })
 });
 
 riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" each="{menu in this.leftMenus}" onclick="{parent.clicked}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> <div class="right menu" if="{this.rightMenus.length}"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" onclick="{menu.clicked}" each="{menu in this.rightMenus}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> </div> </div>', '', 'class="ui teal inverted top app secondary menu"', function(opts) {
-
-
-    this.on('update', () => {
+    this.on('mount',()=>{
+      this.tagName = opts.curtag;
       this.createMenus();
 
-      this.tagName = opts.curtag;
-
-    });
-    this.clicked = function(e){
+      this.update()
+    })
+    this.clicked = function(e) {
 
       return true;
     }.bind(this);
@@ -64,7 +79,7 @@ riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: t
         tag: 'calendar',
         href: '#/calendar',
         icon: 'calendar',
-        clicked:(e)=>{
+        clicked: (e) => {
           return true;
         }
       }];
@@ -74,8 +89,8 @@ riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: t
         tag: 'setting',
         href: '#/setting',
         icon: 'settings',
-        clicked:(e)=>{
-          console.log(('setting selected!'))
+        clicked: (e) => {
+          obs.trigger('navigate-animation');
           return true;
         }
       }]
@@ -151,7 +166,7 @@ riot.tag2('panel', '<div class="ui celled equal width padded grid button white" 
         }.bind(this)
 });
 
-riot.tag2('setting', '<button class="ui button" onclick="{clear}"> reset </button>', '', '', function(opts) {
+riot.tag2('setting', '<header curtag="setting"></Header> <div class="ui container app segment"> <button class="ui button" onclick="{clear}"> reset </button> </div>', '', '', function(opts) {
         this.clear = function(e) {
             localStorage.removeItem('data');
             location.reload(true);
@@ -162,6 +177,8 @@ riot.tag2('time-table', '<panes class="ui one column stackable grid"> <panel eac
         this.date = opts.date;
         this.on('mount', () => {
             RiotControl.trigger('init');
+            this.date=opts.date;
+
             this.update();
         })
         this.on('update',()=>{
@@ -175,29 +192,29 @@ riot.tag2('time-table', '<panes class="ui one column stackable grid"> <panel eac
         })
 });
 
-riot.tag2('week', '<table class="ui unstackable celled definition table"> <thead> <tr> <th></th> <th>Mon.</th> <th>Tue.</th> <th>Wed.</th> <th>Thur.</th> <th>Fri.</th> </tr> </thead> <tbody> </tbody> </table>', '', '', function(opts) {
+riot.tag2('week', '<header curtag="week"></Header> <div class="ui container app segment"> <table class="ui unstackable celled definition table"> <thead> <tr> <th></th> <th>Mon.</th> <th>Tue.</th> <th>Wed.</th> <th>Thur.</th> <th>Fri.</th> </tr> </thead> <tbody> </tbody> </table> </div>', '', '', function(opts) {
     this.on('mount', () => {
       RiotControl.trigger('init');
     });
-    this.on('unmount',()=>{
+    this.on('unmount', () => {
 
     })
-    RiotControl.on('data_changed',(newdata)=>{
+    RiotControl.on('data_changed', (newdata) => {
 
-      this.data=newdata;
-      var datalen=this.data.length,
-      arylen=this.data[0].length;
-      var $tbody=$('tbody',this.root),
-          text='';
+      this.data = newdata;
+      var datalen = this.data.length,
+        arylen = this.data[0].length;
+      var $tbody = $('tbody', this.root),
+        text = '';
       for (var i = 0; i < arylen; i++) {
-        text+=`<tr><td>${i+1}</td>`;
+        text += `<tr><td>${i+1}</td>`;
         for (var j = 0; j < datalen; j++) {
-          text+=`<td>${this.data[j][i].subject}</br>
+          text += `<td>${this.data[j][i].subject}</br>
                     ${this.data[j][i].place}</br></td>`;
         }
-        text+='</tr>';
+        text += '</tr>';
       }
-      $tbody.append(text);
+      $tbody.html(text);
       this.update();
     })
 });

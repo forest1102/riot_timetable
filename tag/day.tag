@@ -1,30 +1,28 @@
 <day>
+    <Header curtag="day"></Header>
     <style scoped>
         .column {
             color: #000000;
         }
     </style>
-    
-    <div class="ui top attached tabular menu">
-        <a class={item:true, active: this.date==menu} data-tab="{menu}" href="{'#/day/'+menu}" each={menu,i in this.weeks}>
+    <div class="ui container app segment">
+        <div class="ui top attached tabular menu">
+            <a class={item:true, active: this.date==menu} data-tab="{menu}" href="{'#/day/'+menu}" each={menu,i in this.weeks}>
             {menu}
         </a>
+        </div>
+        <time-table class="ui container app segment" date={this.date}/>
     </div>
-    <route class="ui container app segment"/>
     <script>
         var sub = riot.route.create();
         this.weeks = WEEK;
-        this.on('mount',()=>{
-            this.date=riot.router.current.uri.split('/')[2];
-            this.update();
-            // console.log('day mounted!');
+        this.on('update', () => {
+            // console.log(opts.param[0])
+            this.date = opts.param[0];
+            this.update()
         })
-        obs.on('dataChanged', function (data) {
+        obs.on('dataChanged', function(data) {
             var text = '';
-        })
-        sub('day/*', (date) => {
-            this.date = date;
-            this.update();
         })
     </script>
 </day>

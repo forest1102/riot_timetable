@@ -1,5 +1,8 @@
 <calendar>
-    <!--<Header curtag="calendar"></Header>-->
+    <Header curtag="calendar"></Header>
+    <div class="ui container app segment">
+        
+    </div>
     <!--<form onsubmit={submit}>-->
     <!--    <input type="text" name="title"/>-->
     <!--    <input type="submit" value="Submit"/>-->

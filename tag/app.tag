@@ -1,45 +1,65 @@
 <app class="app">
     <modal></modal>
-    <Header curtag={this.cur}></Header>
-    <route class="ui container app segment not-opacity" id="view" />
+
+    <route1 class="not-opacity" id="view" />
+    <div id="animation"></div>
     <!--<navigation class="ui container app segment" />-->
     <div class="modal-mount"></div>
     <style scoped>
-        /*#view {*/
-        /*    opacity: 0;*/
-        /*    transition: 0.5s;*/
-        /*}*/
+        /*#view {
+            opacity: 0;
+            transition: 0.5s;
+        }
         
-        /*.not-opacity {*/
-        /*    opacity: 1!important;*/
-        /*    transition: 0.5s;*/
-        /*}*/
+        .not-opacity {
+            opacity: 1!important;
+            transition: 0.5s;
+        }*/
     </style>
 
     <script>
-        riot.router.on('route:updated', (data) => {
-            this.cur = data.matches[1].tag;
-            riot.update();
+        var r = route.create();
+        r('', () => {
+            r('day/Mon')
         })
-        this.on('updated', function(e) {
-            // var target = document.getElementById('view');
-            // if (target != null) {
-            //     setTimeout(function() {
-            //         target.classList.add('not-opacity');
-            //     }, 500);
-            // }
-        });
+        r('/day', () => {
+            r('day/Mon')
+                // riot.update();
+        })
+        r((cur, ...param) => {
+            var curTag = ($.inArray(cur, TAG) >= 0) ? cur : 'not-found';
+            // console.log(tags)
+            if (!this.animation) {
+                var tags = riot.mount('#view', curTag, {
+                    param: param
+                })
+                this.update();
+            }
+            else {
+                this.animation=false;
+                setTimeout(() => {
+                    var tags = riot.mount('#view', curTag, {
+                        param: param
+                    })
+                    this.update();
+                }, 2000);
+            }
+            // this.update();
+        })
+        this.on('updated', function(e) {});
         // console.log(riot.router.use)
-        obs.on('animation-start', () => {
+        obs.on('navigate-animation', () => {
             // riot.route.stop();
+            console.log('animation!!')
+            this.animation = true;
+        });
+        // riot.route.start(true);
 
-        })
 
-        
 
-        riot.router.use((request, response, next) => {
-            
-        })
+        // riot.router.use((request, response, next) => {
+
+        // })
     </script>
 
 </app>

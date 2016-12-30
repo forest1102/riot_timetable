@@ -15,8 +15,7 @@
     "riot-redux": "^0.3.3",
     "riot-route": "^2.5.0",
     "riot-router": "^0.8.1",
-    "riotcontrol": "0.0.3",
-    "riotgear": "^3.5.0"
+    "riotcontrol": "0.0.3"
   },
   "devDependencies": {
     "buble": "^0.15.0",
