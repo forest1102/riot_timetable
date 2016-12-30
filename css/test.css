@@ -1,0 +1,54 @@
+*, *:before, *:after {
+  box-sizing: border-box; 
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: table;
+  width: 100%;
+  position: relative;
+  margin-bottom: 40px;
+}
+.menu li {
+  border: 1px solid #efefef;
+  display: table-cell;
+  text-align: center;
+  padding: 10px 0;
+  transition: 0.3s;
+}
+.menu li:hover {
+  background: #efefef;
+  transition: 0.3s;
+}
+.menu li a {
+  color: #444;
+  text-decoration: none;
+  display: block;
+  transition: 0.3s;
+}
+.menu li a:hover {
+  opacity: 0.7;
+  transition: 0.3s;
+}
+.menu:after {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  content: "上記をクリックするとページが切り替わります。";
+  font-size: 0.6em;
+}
+h1 {
+  font-size: 1.1em;
+  text-align: center;
+}
+.item_box {
+  width: 80%;
+  background: #efefef;
+  text-align: center;
+  margin: 0 auto 10px;
+}

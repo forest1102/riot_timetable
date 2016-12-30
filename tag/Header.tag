@@ -1,45 +1,71 @@
-<Header>
-    <div class="ui secondary inverted teal menu">
-        <a class={item: true, active: menu.url.substring(1) === riot.router.current.uri} 
-            href="{menu.url}" 
-            each={menu in this.leftMenus}>
-            <i class="{menu.icon} icon" if={menu.icon}></i>{menu.text}</a>
-        <div class="right menu" if={this.rightMenus.length}>
-          <a class={item: true, active: menu.url.substring(1) === riot.router.current.uri} 
-            href="{menu.url}" 
-            each={menu in this.rightMenus}>
-              <i class="{menu.icon} icon" if={menu.icon}></i>{menu.text}</a>
-        </div>
+<Header class="ui teal inverted top app secondary menu">
+  <div class="ui container">
+    <a class={item: true, active: this.tagName==menu.tag} href="{menu.href}" each={menu in this.leftMenus}
+    onclick={parent.clicked}>
+      <i class="{menu.icon} icon" if={menu.icon}></i>
+    </a>
+    <div class="right menu" if={this.rightMenus.length}>
+      <a class={item: true, active: this.tagName==menu.tag} 
+      href="{menu.href}"
+      onclick={menu.clicked}
+      each={menu in this.rightMenus}>
+        <i class="{menu.icon} icon" if={menu.icon}></i>
+      </a>
     </div>
-    createLeftMenus() {
-        switch(window.state){
-            case window.STATES.MAIN:
-                return [
-                  {url: '#/home',  icon: 'block layout'},
-                  {url: '#/hello', icon:'grid layout'},
-                  {url: '#/404' ,  icon:'calendar'},
-                  
-                ];
-            break;
-            case window.STATES.SETTING:
-                return [
-                    
-                ]
-            break;
-        }
-      }
-    createRightMenus() {
-        return [
-          {url: '#/setting', icon: 'setting'},
-        ];
-      }
-    createMenus() {
-        this.leftMenus  = this.createLeftMenus();
-        this.rightMenus = this.createRightMenus();
-    }
-    // On route update, update this fragment.
-    riot.router.on('route:updated', ()=>{
-        this.createMenus();
-        this.update();
+    <!--<a class="ui button item" onclick={clear}>-->
+    <!--    clear-->
+    <!--</a>-->
+  </div>
+  <script>
+    // RiotControl.on('title_changed',(title)=>{
+    //   this.title=title;
+    //   this.update();
+    // })
+    
+    this.on('update', () => {
+      this.createMenus();
+      // console.log(opts.curtag);
+      this.tagName = opts.curtag;
+      // this.update();
     });
+    clicked(e){
+      // obs.trigger('animation-start');
+      return true;
+    };
+    createLeftMenus() {
+      return [{
+        tag: 'day',
+        href: '#/day',
+        icon: 'block layout'
+      }, {
+        tag: 'week',
+        href: '#/week',
+        icon: 'grid layout'
+      }, {
+        tag: 'calendar',
+        href: '#/calendar',
+        icon: 'calendar',
+        clicked:(e)=>{
+          return true;
+        }
+      }];
+    }
+    createRightMenus() {
+      return [{
+        tag: 'setting',
+        href: '#/setting',
+        icon: 'settings',
+        clicked:(e)=>{
+          console.log(('setting selected!'))
+          return true;
+        }
+      }]
+    }
+    createMenus() {
+        // console.log('aaa');
+        this.leftMenus = this.createLeftMenus();
+        this.rightMenus = this.createRightMenus();
+      }
+      // On route update, update this fragment.
+  </script>
 </Header>

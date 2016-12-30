@@ -10,8 +10,24 @@
   "license": "ISC",
   "dependencies": {
     "babel": "^6.5.2",
+    "redux": "^3.6.0",
     "riot": "^2.6.2",
-    "riot-mui": "0.0.17",
-    "riot-router": "^0.8.1"
-  }
+    "riot-redux": "^0.3.3",
+    "riot-route": "^2.5.0",
+    "riot-router": "^0.8.1",
+    "riotcontrol": "0.0.3",
+    "riotgear": "^3.5.0"
+  },
+  "devDependencies": {
+    "buble": "^0.15.0",
+    "ikki": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forest1102/riot_timetable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/forest1102/riot_timetable/issues"
+  },
+  "homepage": "https://github.com/forest1102/riot_timetable#readme"
 }
