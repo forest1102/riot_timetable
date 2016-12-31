@@ -14,6 +14,9 @@
   </div>
   <script>
     var r = route.create();
+    r('setting',()=>{
+      
+    })
     r((cur) => {
       this.tagName = cur;
       // console.log(cur)
