@@ -93,7 +93,7 @@ riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: t
 
 });
 
-riot.tag2('modal', '<div class="ui modal"> <div class="actions"> <div class="ui deny icon button" onclick="{cancel}"> <i class="remove icon"></i> </div> </div> <form action="" class="ui form" name="myform"> <div class="field"> <label>教科名</label> <input type="text" placeholder="subject" name="subject"> </div> <div class="field"> <label>教師名</label> <input type="text" placeholder="Teacher\'s name" name="teacher"> </div> <div class="field"> <label>場所</label> <input type="text" placeholder="place" name="place"> </div> <div class="field"> <button class="ui positive button" type="submit"> SAVE </button> </div> </form> </div>', '', '', function(opts) {
+riot.tag2('modal', '<div class="ui modal"> <div class="actions"> <div class="ui deny icon button" onclick="{cancel}"> <i class="remove icon"></i> </div> </div> <form action="" class="ui form" name="myform"> <div class="field"> <label>教科名</label> <input type="text" placeholder="subject" name="subject"> </div> <div class="field"> <label>教師名</label> <input type="text" placeholder="Teacher\'s name" name="teacher"> </div> <div class="field"> <label>場所</label> <input type="text" placeholder="place" name="place"> </div> <div class="field"> <button class="ui positive button" type="submit" href=""> SAVE </button> </div> </form> </div>', '', '', function(opts) {
         var sub = riot.route.create();
         obs.on('modal-on', (i, day) => {
             this.day = day;
@@ -116,7 +116,7 @@ riot.tag2('modal', '<div class="ui modal"> <div class="actions"> <div class="ui 
                         teacher: this.teacher.value,
                         place: this.place.value,
                     })
-                    return true;
+                    return false;
                 }
                 else{
                     return false;
@@ -156,7 +156,7 @@ riot.tag2('panel', '<div class="ui celled equal width padded grid button white" 
         }.bind(this)
 });
 
-riot.tag2('setting', '<div class="ui container app segment"> <button class="ui button" onclick="{clear}"> reset </button> </div>', '', '', function(opts) {
+riot.tag2('setting', '<div class="ui container app segment"> <button class="ui button" onclick="{clear}"> reset </button> </div> <div id="authorize-div" style="display: inline"> <span>Authorize access to Google Calendar API</span> <button class="ui button" id="authorize-button" onclick="handleAuthClick(event)"> Authorize </button> </div>', '', '', function(opts) {
         this.clear = function(e) {
             localStorage.removeItem('data');
             location.reload(true);

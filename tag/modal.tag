@@ -19,7 +19,7 @@
                 <input type="text" placeholder="place" name="place">
             </div>
             <div class="field">
-                <button class="ui positive button" type="submit">
+                <button class="ui positive button" type="submit" href="">
                     SAVE
                 </button>
             </div>
@@ -48,7 +48,7 @@
                         teacher: this.teacher.value,
                         place: this.place.value,
                     })
-                    return true;
+                    return false;
                 }
                 else{
                     return false;
