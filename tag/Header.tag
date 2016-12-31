@@ -13,19 +13,12 @@
     <!--</a>-->
   </div>
   <script>
-    var r = route.create();
-    r((cur) => {
-      this.tagName = cur;
+    this.on('mount',()=>{
+      this.tagName = opts.curtag;
+      this.createMenus();
       // console.log(cur)
       this.update()
     })
-
-    this.on('update', () => {
-      this.createMenus();
-      // console.log(opts.curtag);
-      // this.tagName = opts.curtag;
-      // this.update();
-    });
     clicked(e) {
       // obs.trigger('animation-start');
       return true;

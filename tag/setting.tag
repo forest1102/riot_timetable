@@ -1,5 +1,5 @@
 <setting>
-    <!--<Header curtag="setting"></Header>-->
+    <Header curtag="setting"></Header>
     <div class="ui container app segment">
         <button class="ui button" onclick={clear}>
         reset

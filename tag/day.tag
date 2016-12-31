@@ -1,5 +1,5 @@
 <day>
-    <!--<Header curtag="day"></Header>-->
+    <Header curtag="day"></Header>
     <style scoped>
         .column {
             color: #000000;
