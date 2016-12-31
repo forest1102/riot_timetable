@@ -28,6 +28,7 @@
         })
         r((cur, ...param) => {
             var curTag = ($.inArray(cur, TAG) >= 0) ? cur : 'not-found';
+            // console.log('url changed!')
             var tags = riot.mount('#view', curTag, {
                 param: param
             })
