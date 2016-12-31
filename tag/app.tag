@@ -1,6 +1,6 @@
 <app class="app">
     <modal></modal>
-    <Header></Header>
+
     <route1 class="not-opacity" id="view" />
     <div id="animation"></div>
     <!--<navigation class="ui container app segment" />-->
@@ -28,17 +28,31 @@
         })
         r((cur, ...param) => {
             var curTag = ($.inArray(cur, TAG) >= 0) ? cur : 'not-found';
-            var tags = riot.mount('#view', curTag, {
-                param: param
-            })
-            this.update();
+            // console.log(tags)
+            if (!this.animation) {
+                var tags = riot.mount('#view', curTag, {
+                    param: param
+                })
+                this.update();
+            }
+            else {
+                this.animation=false;
+                setTimeout(() => {
+                    var tags = riot.mount('#view', curTag, {
+                        param: param
+                    })
+                    this.update();
+                }, 2000);
+            }
+            // this.update();
         })
         this.on('updated', function(e) {});
-        // obs.on('navigate-animation', () => {
-        //     // riot.route.stop();
-        //     console.log('animation!!')
-        //     this.animation = true;
-        // });
+        // console.log(riot.router.use)
+        obs.on('navigate-animation', () => {
+            // riot.route.stop();
+            console.log('animation!!')
+            this.animation = true;
+        });
         // riot.route.start(true);
 
 
