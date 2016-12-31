@@ -1,5 +1,5 @@
 <week>
-  <Header curtag="week"></Header>
+  <!--<Header curtag="week"></Header>-->
   <div class="ui container app segment">
     <table class="ui unstackable celled definition table">
       <thead>

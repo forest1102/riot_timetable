@@ -1,5 +1,5 @@
 <calendar>
-    <Header curtag="calendar"></Header>
+    <!--<Header curtag="calendar"></Header>-->
     <div class="ui container app segment">
         
     </div>
