@@ -22,12 +22,13 @@ const WEEKtoINT = {
     'Fri': 4
 };
 var store = new Store();
+// var gGCalendar = new GCALENDAR(CALENDAR_ID);
+RiotControl.addStore(store);
 /**
  * Check if current user has authorized this application.
  */
 function checkAuth() {
     $(() => {
-        RiotControl.addStore(store);
         riot.mount('*');
         RiotControl.trigger('init');
         gapi.auth.authorize({
@@ -54,47 +55,9 @@ function handleAuthResult(authResult) {
     obs.trigger('auth-check', authResult && !authResult.error);
     if (authResult && !authResult.error) {
         // Hide auth UI, then load client library.
-        loadCalendarApi();
-    }
-    else {
+        RiotControl.trigger('api-ready');
+    } else {
         // Show auth UI, allowing the user to initiate authorization by
         // clicking authorize button.
     }
-}
-
-function loadCalendarApi() {
-    $('#calendar1').calendar();
-    $('#calendar2').calendar();
-    $('#submit').click(function() {
-        // JavaScript
-        var sd = (new Date($('#startTime').val()));
-        var ed = (new Date($('#endTime').val()));
-        var summary = $('#summary').val();
-        var location = $('#place').val();
-        var description = $('#discription').val();
-        console.log(sd, ed);
-        gGCalendar.addEventA(summary, sd, ed, location, description, function(resp) {
-            console.log(resp);
-            gGCalendar.show(new Date(), (resp) => {
-                var events = resp.items;
-                // appendPre('Upcoming events:');
-
-                if (events.length > 0) {
-                    for (i = 0; i < events.length; i++) {
-                        var event = events[i];
-                        var when = event.start.dateTime;
-                        if (!when) {
-                            when = event.start.date;
-                        }
-                        console.log(event.summary + ' (' + when + ')');
-                    }
-                }
-                else {
-                    console.log('No upcoming events found.');
-                }
-            })
-            return false;
-        })
-    });
-
 }
