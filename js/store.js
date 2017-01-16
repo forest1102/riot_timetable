@@ -33,6 +33,9 @@ function Store() {
         // console.log('hogehoge')
         this.trigger('data_changed', this.data);
     });
+    this.on('api-insert', (newData) => {
+
+    })
     this.on('api-ready', () => {
             this.gGCalendar = new GCALENDAR(CALENDAR_ID);
             this.gGCalendar.show(new Date(), (resp) => {

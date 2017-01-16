@@ -43,61 +43,62 @@ riot.tag2('day', '<div class="ui container app segment"> <div class="ui top atta
 });
 
 riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" each="{menu in this.leftMenus}" onclick="{parent.clicked}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> <div class="right menu" if="{this.rightMenus.length}"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" onclick="{menu.clicked}" each="{menu in this.rightMenus}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> </div> </div>', '', 'class="ui teal inverted top app secondary menu"', function(opts) {
-    var r = route.create();
-    r('setting',()=>{
+        var r = route.create();
 
-    })
-    r((cur) => {
-      this.tagName = cur;
+        r((cur) => {
+            this.tagName = cur;
 
-      this.update()
-    })
+            this.update()
+        })
 
-    this.on('update', () => {
-      this.createMenus();
+        this.on('update', () => {
+            this.createMenus();
 
-    });
-    this.clicked = function(e) {
+        });
+        this.clicked = function(e) {
 
-      return true;
-    }.bind(this);
-    this.createLeftMenus = function() {
-      return [{
-        tag: 'day',
-        href: '#/day',
-        icon: 'block layout'
-      }, {
-        tag: 'week',
-        href: '#/week',
-        icon: 'grid layout'
-      }, {
-        tag: 'calendar',
-        href: '#/calendar',
-        icon: 'calendar',
-        clicked: (e) => {
-          return true;
-        }
-      }];
-    }.bind(this)
-    this.createRightMenus = function() {
-      return [{
-        tag: 'setting',
-        href: '#/setting',
-        icon: 'settings',
-        clicked: (e) => {
-          obs.trigger('navigate-animation');
-          return true;
-        }
-      }]
-    }.bind(this)
-    this.createMenus = function() {
+            return true;
+        }.bind(this);
+        this.createLeftMenus = function() {
+            return [
+                {
+                    tag: 'day',
+                    href: '#/day',
+                    icon: 'block layout'
+                }, {
+                    tag: 'week',
+                    href: '#/week',
+                    icon: 'grid layout'
+                }, {
+                    tag: 'calendar',
+                    href: '#/calendar',
+                    icon: 'calendar',
+                    clicked: (e) => {
+                        return true;
+                    }
+                }
+            ];
+        }.bind(this)
+        this.createRightMenus = function() {
+            return [
+                {
+                    tag: 'setting',
+                    href: '#/setting',
+                    icon: 'settings',
+                    clicked: (e) => {
+                        obs.trigger('navigate-animation');
+                        return true;
+                    }
+                }
+            ]
+        }.bind(this)
+        this.createMenus = function() {
 
-        this.leftMenus = this.createLeftMenus();
-        this.rightMenus = this.createRightMenus();
-      }.bind(this)
+            this.leftMenus = this.createLeftMenus();
+            this.rightMenus = this.createRightMenus();
+        }.bind(this)
 
 });
-
 riot.tag2('modal', '<div class="ui modal"> <div class="actions"> <div class="ui deny icon button" onclick="{cancel}"> <i class="remove icon"></i> </div> </div> <form action="" class="ui form" name="myform"> <div class="field"> <label>教科名</label> <input type="text" placeholder="subject" name="subject"> </div> <div class="field"> <label>教師名</label> <input type="text" placeholder="Teacher\'s name" name="teacher"> </div> <div class="field"> <label>場所</label> <input type="text" placeholder="place" name="place"> </div> <div class="field"> <button class="ui positive button" type="submit" href=""> SAVE </button> </div> </form> </div>', '', '', function(opts) {
         var sub = riot.route.create();
         obs.on('modal-on', (i, day) => {
