@@ -19,12 +19,17 @@ riot.tag2('app', '<modal></modal> <header></Header> <route1 class="not-opacity" 
 
 });
 
-riot.tag2('calendar', '<div class="ui container app segment"> </div>', '', '', function(opts) {
-        this.submit = function(e){
+riot.tag2('calendar', '<div class="ui container app segment"> <ul> <li each="{s in this.schedule}">{s.summary}</li> </ul> </div>', '', '', function(opts) {
+        this.schedule = [];
+        this.on('mount', () => {
 
-        }.bind(this)
+        })
+        RiotControl.on('schedule-changed', (resp) => {
+            this.schedule = resp.items;
+            this.update();
+        })
 });
-riot.tag2('day', '<div class="ui container app segment"> <div class="ui top attached tabular menu"> <a class="{item:true, active: this.date==menu}" data-tab="{menu}" href="{\'#/day/\'+menu}" each="{menu,i in this.weeks}"> {menu} </a> </div> <time-table class="ui container app segment" date="{this.date}"></time-table> </div>', 'day .column,[riot-tag="day"] .column,[data-is="day"] .column{ color: #000000; }', '', function(opts) {
+riot.tag2('day', '<div class="ui container app segment"> <div class="ui top attached tabular menu"> <a class="{item:true, active: this.date==menu}" data-tab="{menu}" href="{\'#/day/\'+menu}" each="{menu,i in this.weeks}"> {menu} </a> </div> <time-table class="ui container app segment" date="{this.date}"></time-table> </div>', 'day .column,[data-is="day"] .column{ color: #000000; }', '', function(opts) {
         var sub = riot.route.create();
         this.weeks = WEEK;
         this.on('update', () => {
@@ -38,61 +43,62 @@ riot.tag2('day', '<div class="ui container app segment"> <div class="ui top atta
 });
 
 riot.tag2('header', '<div class="ui container"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" each="{menu in this.leftMenus}" onclick="{parent.clicked}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> <div class="right menu" if="{this.rightMenus.length}"> <a class="{item: true, active: this.tagName==menu.tag}" href="{menu.href}" onclick="{menu.clicked}" each="{menu in this.rightMenus}"> <i class="{menu.icon} icon" if="{menu.icon}"></i> </a> </div> </div>', '', 'class="ui teal inverted top app secondary menu"', function(opts) {
-    var r = route.create();
-    r('setting',()=>{
+        var r = route.create();
 
-    })
-    r((cur) => {
-      this.tagName = cur;
+        r((cur) => {
+            this.tagName = cur;
 
-      this.update()
-    })
+            this.update()
+        })
 
-    this.on('update', () => {
-      this.createMenus();
+        this.on('update', () => {
+            this.createMenus();
 
-    });
-    this.clicked = function(e) {
+        });
+        this.clicked = function(e) {
 
-      return true;
-    }.bind(this);
-    this.createLeftMenus = function() {
-      return [{
-        tag: 'day',
-        href: '#/day',
-        icon: 'block layout'
-      }, {
-        tag: 'week',
-        href: '#/week',
-        icon: 'grid layout'
-      }, {
-        tag: 'calendar',
-        href: '#/calendar',
-        icon: 'calendar',
-        clicked: (e) => {
-          return true;
-        }
-      }];
-    }.bind(this)
-    this.createRightMenus = function() {
-      return [{
-        tag: 'setting',
-        href: '#/setting',
-        icon: 'settings',
-        clicked: (e) => {
-          obs.trigger('navigate-animation');
-          return true;
-        }
-      }]
-    }.bind(this)
-    this.createMenus = function() {
+            return true;
+        }.bind(this);
+        this.createLeftMenus = function() {
+            return [
+                {
+                    tag: 'day',
+                    href: '#/day',
+                    icon: 'block layout'
+                }, {
+                    tag: 'week',
+                    href: '#/week',
+                    icon: 'grid layout'
+                }, {
+                    tag: 'calendar',
+                    href: '#/calendar',
+                    icon: 'calendar',
+                    clicked: (e) => {
+                        return true;
+                    }
+                }
+            ];
+        }.bind(this)
+        this.createRightMenus = function() {
+            return [
+                {
+                    tag: 'setting',
+                    href: '#/setting',
+                    icon: 'settings',
+                    clicked: (e) => {
+                        obs.trigger('navigate-animation');
+                        return true;
+                    }
+                }
+            ]
+        }.bind(this)
+        this.createMenus = function() {
 
-        this.leftMenus = this.createLeftMenus();
-        this.rightMenus = this.createRightMenus();
-      }.bind(this)
+            this.leftMenus = this.createLeftMenus();
+            this.rightMenus = this.createRightMenus();
+        }.bind(this)
 
 });
-
 riot.tag2('modal', '<div class="ui modal"> <div class="actions"> <div class="ui deny icon button" onclick="{cancel}"> <i class="remove icon"></i> </div> </div> <form action="" class="ui form" name="myform"> <div class="field"> <label>教科名</label> <input type="text" placeholder="subject" name="subject"> </div> <div class="field"> <label>教師名</label> <input type="text" placeholder="Teacher\'s name" name="teacher"> </div> <div class="field"> <label>場所</label> <input type="text" placeholder="place" name="place"> </div> <div class="field"> <button class="ui positive button" type="submit" href=""> SAVE </button> </div> </form> </div>', '', '', function(opts) {
         var sub = riot.route.create();
         obs.on('modal-on', (i, day) => {
@@ -150,19 +156,18 @@ riot.tag2('navigation', '<form action="" class="ui form" name="myform"> <div cla
 
 riot.tag2('not-found', '<h1>Not Found</h1> <div id="error">error</div>', '', '', function(opts) {
 });
-riot.tag2('panel', '<div class="ui celled equal width padded grid button white" onclick="{click}"> <div class="row"> <div class="column">{opts.subject}</div> </div> <div class="row"> <div class="column">{opts.teacher}</div> <div class="column">{opts.place}</div> </div> </div>', 'panel .column,[riot-tag="panel"] .column,[data-is="panel"] .column{ height:3em; }', '', function(opts) {
+riot.tag2('panel', '<div class="ui celled equal width padded grid button white" onclick="{click}"> <div class="row"> <div class="column">{opts.subject}</div> </div> <div class="row"> <div class="column">{opts.teacher}</div> <div class="column">{opts.place}</div> </div> </div>', 'panel .column,[data-is="panel"] .column{ height:3em; }', '', function(opts) {
         this.click = function(e) {
             obs.trigger('modal-on', opts.i,opts.day);
         }.bind(this)
 });
 
-riot.tag2('setting', '<div class="ui container app segment"> <button class="ui button" onclick="{clear}"> reset </button> </div> <div id="authorize-div" style="display: inline"> <span>Authorize access to Google Calendar API</span> <button class="ui button" id="authorize-button" onclick="handleAuthClick(event)"> Authorize </button> </div>', '', '', function(opts) {
+riot.tag2('setting', '<div class="ui container app segments"> <div class="ui segment"> <a onclick="{clear}">reset</a> </div> <div class="ui segment"> <a id="authorize-button" onclick="handleAuthClick(event)"> Authorize access to Google Calendar API </a> </div> </div>', '', '', function(opts) {
         this.clear = function(e) {
             localStorage.removeItem('data');
             location.reload(true);
         }.bind(this)
 });
-
 riot.tag2('time-table', '<panes class="ui one column stackable grid"> <panel each="{d,i in this.data}" subject="{d.subject}" teacher="{d.teacher}" place="{d.place}" day="{this.date}" i="{i}" class="column"></panel> </panes>', '', '', function(opts) {
         this.date = opts.date;
         this.on('mount', () => {

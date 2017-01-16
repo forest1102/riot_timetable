@@ -1,16 +1,19 @@
 <calendar>
     <!--<Header curtag="calendar"></Header>-->
     <div class="ui container app segment">
-        
+        <ul>
+            <li each={s in this.schedule}>{s.summary}</li>
+        </ul>
     </div>
-    <!--<form onsubmit={submit}>-->
-    <!--    <input type="text" name="title"/>-->
-    <!--    <input type="submit" value="Submit"/>-->
-    <!--</form>-->
+
     <script>
-        submit(e){
-            // console.log(this.title.value)
-            // RiotControl.trigger('title_change',this.title.value);
-        }
+        this.schedule = [];
+        this.on('mount', () => {
+            // RiotControl.trigger('api-ready');
+        })
+        RiotControl.on('schedule-changed', (resp) => {
+            this.schedule = resp.items;
+            this.update();
+        })
     </script>
 </calendar>
