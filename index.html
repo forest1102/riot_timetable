@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Riot with Rollup</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <app></app>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script>
+        process = {
+            env: {
+                NODE_ENV: 'development'
+            }
+        };
+    </script>
+    <script src="dist/bundle.js"></script>
+</body>
+
+</html>
