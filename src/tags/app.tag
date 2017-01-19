@@ -1,3 +1,4 @@
+import {timetableSelector} from '../select'
 <app>
     <modal></modal>
     <Header></Header>
@@ -36,6 +37,9 @@
             this.update();
         })
         this.on('updated', function (e) {});
+        this.subscribe(() => {
+            console.log('timetable updated!');
+        })
         // obs.on('navigate-animation', () => {     // riot.route.stop();     console.log('animation!!')     this.animation = true; }); riot.route.start(true); riot.router.use((request, response, next) => { })
     </script>
 

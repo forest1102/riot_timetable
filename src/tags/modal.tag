@@ -1,3 +1,4 @@
+import {dataSave} from '../actions'
 <modal>
     <div class="ui modal">
         <div class="actions">
@@ -38,17 +39,21 @@
         }
         this.submit = (e) => {
             console.log(this.day);
-            RiotControl.trigger('data_save', {
+            let data = {
                 index: this.index,
                 day: this.day,
                 subject: this.refs.subject.value,
                 teacher: this.refs.teacher.value,
                 place: this.refs.place.value
-            })
+            }
+            RiotControl.trigger('data_save', data)
+            data.day = WEEKtoINT[this.day];
+            this.dispatch(dataSave(data))
             this.refs.myform.reset();
             riot.update();
             $('.ui.modal').modal('hide');
             return true;
         }
+        this.dispatchify({dataSave})
     </script>
 </modal>

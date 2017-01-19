@@ -6,43 +6,38 @@ import {
     DATA_SAVE,
     INIT
 } from './actions.js'
-var setDefaultState = () => {
-    if (localStorage.timeTable == null) {
-        var defaultState = []
-        for (var i = 0; i < 5; i++) {
-            var obArr = [];
-            for (var j = 0; j < 6; j++) {
-                obArr.push({
-                    'teacher': '',
-                    'place': '',
-                    'subject': ''
-                })
-            }
-            defaultState.push(obArr)
-        }
-        localStorage.setItem("timeTable", JSON.stringify(defaultState));
-        return defaultState;
-    } else {
-        return JSON.parse(localStorage.getItem("timeTable"));
+var defaultState = {
+    timetable: []
+}
+for (var i = 0; i < 5; i++) {
+    var obArr = [];
+    for (var j = 0; j < 6; j++) {
+        obArr.push({
+            'teacher': '',
+            'place': '',
+            'subject': ''
+        })
     }
+    defaultState.timetable.push(obArr)
 }
 
-function reducer(state = setDefaultState(), action) {
+function timeTables(state = defaultState, action) {
     switch (action.type) {
         case DATA_SAVE:
             var newState = [
-                ...state.slice(0, action.day),
-                ...state[action.day].slice(0, action.index),
-                Object.assign({}, state[action.day][action.index], {
-                    'subject': action.subject,
-                    'teacher': action.teacher,
-                    'place': action.place
-                }),
-                ...state[action.day].slice(action.index + 1),
-                ...state.slice(action.day + 1)
+                ...state.timetable.slice(0, action.day), [...state.timetable[action.day].slice(0, action.index), {
+                        ...state.timetable[action.day][action.index],
+                        'subject': action.subject,
+                        'teacher': action.teacher,
+                        'place': action.place
+                    },
+                    ...state.timetable[action.day].slice(action.index + 1)
+                ],
+
+                ...state.timetable.slice(action.day + 1)
             ]
-            console.log(newState);
-            localStorage.setItem("timeTable", JSON.stringify(newState));
+            console.log(state);
+            // localStorage.setItem("timeTable", JSON.stringify(newState));
             return newState;
         default:
             return state
@@ -50,6 +45,7 @@ function reducer(state = setDefaultState(), action) {
     }
 }
 
-export default combineReducers({
-    reducer: reducer
+const reducer = combineReducers({
+    timeTables
 })
+export default reducer;
