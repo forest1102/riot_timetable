@@ -3,9 +3,11 @@ import {
 } from 'reselect'
 
 export const timetableSelector = createSelector(
-    (state) => state.timetable,
+    (state) => state.timetable.timetable,
     (timetable) => {
-        console.log('timetable updated!');
-        return timetable
+        // console.log(timetable)
+        return {
+            timetable: timetable
+        }
     }
 )

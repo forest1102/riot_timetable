@@ -46,8 +46,7 @@ import {dataSave} from '../actions'
                 teacher: this.refs.teacher.value,
                 place: this.refs.place.value
             }
-            RiotControl.trigger('data_save', data)
-            data.day = WEEKtoINT[this.day];
+            // RiotControl.trigger('data_save', data)
             this.dispatch(dataSave(data))
             this.refs.myform.reset();
             riot.update();

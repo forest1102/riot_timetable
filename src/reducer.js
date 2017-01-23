@@ -13,32 +13,39 @@ for (var i = 0; i < 5; i++) {
     var obArr = [];
     for (var j = 0; j < 6; j++) {
         obArr.push({
-            'teacher': '',
-            'place': '',
-            'subject': ''
+            'teacher': ' ',
+            'place': ' ',
+            'subject': ' ',
+            'day': WEEK[i],
+            'index': j
         })
     }
     defaultState.timetable.push(obArr)
 }
 
-function timeTables(state = defaultState, action) {
+function timeTableReducer(state = defaultState, action) {
     switch (action.type) {
         case DATA_SAVE:
+            var dayIndex = WEEKtoINT[action.day]
             var newState = [
-                ...state.timetable.slice(0, action.day), [...state.timetable[action.day].slice(0, action.index), {
-                        ...state.timetable[action.day][action.index],
+                ...state.timetable.slice(0, dayIndex), [...state.timetable[dayIndex].slice(0, action.index), {
+                        ...state.timetable[dayIndex][action.index],
                         'subject': action.subject,
                         'teacher': action.teacher,
-                        'place': action.place
+                        'place': action.place,
+                        'day': action.day,
+                        'index': action.index
                     },
-                    ...state.timetable[action.day].slice(action.index + 1)
+                    ...state.timetable[dayIndex].slice(action.index + 1)
                 ],
 
-                ...state.timetable.slice(action.day + 1)
+                ...state.timetable.slice(dayIndex + 1)
             ]
-            console.log(state);
+            console.log(newState, 'by reducer');
             // localStorage.setItem("timeTable", JSON.stringify(newState));
-            return newState;
+            return { ...state,
+                timetable: newState
+            }
         default:
             return state
 
@@ -46,6 +53,6 @@ function timeTables(state = defaultState, action) {
 }
 
 const reducer = combineReducers({
-    timeTables
+    timetable: timeTableReducer
 })
 export default reducer;

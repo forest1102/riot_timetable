@@ -12,19 +12,28 @@
                 {menu}
             </a>
         </div>
-        <time-table class="ui container app segment" date={this.date}/>
+        <div class="ui container app segment">
+            <div class="ui one column stackable grid">
+                <panel each={d in this.timetableDay} subject={d.subject} teacher={d.teacher} place={d.place} date={d.day} i={d.index} class="column"></panel>
+            </div>
+        </div>
     </div>
     <script>
-        var sub = route.create();
-        this.date = ''
+        // var sub = route.create();
+        this.date = opts.param[0]
         this.weeks = WEEK;
-        this.on('mount', () => {
-            // console.log(opts.param[0])
+        this.on('before-mount', () => {
+            // console.log(a)
             this.date = opts.param[0];
-            this.update()
+            this.timetableDay = opts.timetable[WEEKtoINT[this.date]]
+            console.log(this.timetableDay, 'by day.tag on before-mountEvent');
+            // this.update()
         }).on('update', () => {
             this.date = opts.param[0];
-            // console.log(opts.param[0])
+            this.timetableDay = opts.timetable[WEEKtoINT[this.date]]
+            // this.update();
+            console.log(this.timetableDay, 'by day.tag on updateEvent');
+            // console.log(opts); this.update() console.log(opts.timetable, 'by day.tag'); console.log(opts.param[0])
         })
     </script>
 </day>

@@ -1,7 +1,7 @@
 function checkAuth() {
     $(() => {
         riot.mount('*');
-        RiotControl.trigger('init');
+        // RiotControl.trigger('init');
         gapi.auth.authorize({
             'client_id': CLIENT_ID,
             'scope': SCOPES.join(' '),

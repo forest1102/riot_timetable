@@ -2,10 +2,11 @@ import {timetableSelector} from '../select'
 <app>
     <modal></modal>
     <Header></Header>
-    <route1 class="not-opacity" id="view"/>
+    <!-- <div data-is={curTag} timetable={timetable} param={param}/> -->
+    <div id="view"></div>
     <div id="animation"></div>
     <!--<navigation class="ui container app segment" />-->
-    <route id="route"></route>
+    <!-- <route id="route"></route> -->
     <style scoped>
         /*#view {
             opacity: 0;
@@ -19,7 +20,8 @@ import {timetableSelector} from '../select'
     </style>
 
     <script>
-        // this.curTag = ''; this.param = [];
+        this.curTag = '';
+        this.param = [];
         var r = route.create();
         r('', () => {
             r('day/Mon')
@@ -29,16 +31,24 @@ import {timetableSelector} from '../select'
             // riot.update();
         })
         r((cur, ...param) => {
-            var curTag = ($.inArray(cur, TAG) >= 0)
+            this.curTag = ($.inArray(cur, TAG) >= 0)
                 ? cur
                 : 'not-found';
             // console.log('url changed!')
-            riot.mount('#view', curTag, {param: param})
-            this.update();
+            this.param = param;
+            riot.mount('#view', this.curTag, {
+                timetable: this.timetable,
+                param: this.param
+            })
+            riot.update();
         })
-        this.on('updated', function (e) {});
-        this.subscribe(() => {
-            console.log('timetable updated!');
+        this.subscribe(timetableSelector)
+        this.on('update', () => {
+            riot.mount('#view', this.curTag, {
+                timetable: this.timetable,
+                param: this.param
+            })
+            // riot.update();
         })
         // obs.on('navigate-animation', () => {     // riot.route.stop();     console.log('animation!!')     this.animation = true; }); riot.route.start(true); riot.router.use((request, response, next) => { })
     </script>
