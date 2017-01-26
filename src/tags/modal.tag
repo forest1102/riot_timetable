@@ -1,4 +1,4 @@
-import {dataSave} from '../actions'
+import {dataSave,asyncLoad} from '../actions'
 <modal>
     <div class="ui modal">
         <div class="actions">
@@ -47,11 +47,11 @@ import {dataSave} from '../actions'
                 place: this.refs.place.value
             }
             // RiotControl.trigger('data_save', data)
-            this.dispatch(dataSave(data))
+            this.dispatch(asyncLoad(data))
             this.refs.myform.reset();
-            riot.update();
+            // this.update();
             $('.ui.modal').modal('hide');
-            return true;
+            // return true;
         }
         this.dispatchify({dataSave})
     </script>

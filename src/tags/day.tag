@@ -22,18 +22,12 @@
         // var sub = route.create();
         this.date = opts.param[0]
         this.weeks = WEEK;
-        this.on('before-mount', () => {
+        this.on('mount', () => {
             // console.log(a)
             this.date = opts.param[0];
             this.timetableDay = opts.timetable[WEEKtoINT[this.date]]
-            console.log(this.timetableDay, 'by day.tag on before-mountEvent');
-            // this.update()
-        }).on('update', () => {
-            this.date = opts.param[0];
-            this.timetableDay = opts.timetable[WEEKtoINT[this.date]]
-            // this.update();
-            console.log(this.timetableDay, 'by day.tag on updateEvent');
-            // console.log(opts); this.update() console.log(opts.timetable, 'by day.tag'); console.log(opts.param[0])
+            console.log(this.timetableDay, 'by day.tag on mountEvent');
+            this.update()
         })
     </script>
 </day>

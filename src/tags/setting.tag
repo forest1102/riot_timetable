@@ -15,7 +15,7 @@
             // obs.trigger('handleAuth');
         }
         this.clear = (e) => {
-            localStorage.removeItem('data');
+            localStorage.removeItem('timetable');
             location.reload(true);
         }
     </script>

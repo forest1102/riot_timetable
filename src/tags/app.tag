@@ -1,4 +1,3 @@
-import {timetableSelector} from '../select'
 <app>
     <modal></modal>
     <Header></Header>
@@ -20,8 +19,20 @@ import {timetableSelector} from '../select'
     </style>
 
     <script>
+        import {timetableSelector} from '../select';
+        import {taskLoad} from '../actions'
         this.curTag = '';
         this.param = [];
+        this.on('before-mount', () => {
+            this.dispatch(taskLoad())
+        })
+        this.on('update', () => {
+            riot.mount('#view', this.curTag, {
+                timetable: this.timetable,
+                param: this.param
+            })
+            // riot.update();
+        })
         var r = route.create();
         r('', () => {
             r('day/Mon')
@@ -43,13 +54,7 @@ import {timetableSelector} from '../select'
             riot.update();
         })
         this.subscribe(timetableSelector)
-        this.on('update', () => {
-            riot.mount('#view', this.curTag, {
-                timetable: this.timetable,
-                param: this.param
-            })
-            // riot.update();
-        })
+
         // obs.on('navigate-animation', () => {     // riot.route.stop();     console.log('animation!!')     this.animation = true; }); riot.route.start(true); riot.router.use((request, response, next) => { })
     </script>
 

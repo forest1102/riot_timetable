@@ -18,13 +18,12 @@
     </style>
     <script>
         this.on('mount', () => {
-            console.log(opts, ' by panel.tag on mount')
-            // this.update()
+            // console.log(opts, ' by panel.tag on mount') this.update()
         }).on('update', () => {
-            console.log(opts, 'by panel.tag on update')
+            // console.log(opts, 'by panel.tag on update')
         })
         this.click = (e) => {
-            console.log(opts.day);
+            console.log(opts.i);
             obs.trigger('modal-on', opts.i, opts.date);
         }
     </script>

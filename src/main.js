@@ -1,11 +1,12 @@
+import 'babel-polyfill'
 import riot from 'riot'
 import route from 'riot-route'
-import RiotControl from 'riotcontrol'
-import {
-    createStore
-} from 'redux'
+// import RiotControl from 'riotcontrol'
+// import createSagaMiddleware from 'redux-saga'
 import rrm from 'riot-redux-mixin'
 import reducer from './reducer.js'
+// import mySaga from './sagas.js'
+import configureStore from './configureStore.js'
 import './tags/app.tag'
 import './tags/md.tag'
 import './tags/calendar.tag'
@@ -18,9 +19,10 @@ import './tags/panel.tag'
 import './tags/setting.tag'
 import './tags/time-table.tag'
 import './tags/week.tag'
+
 // console.log('aaa');
 window.riot = riot;
-window.a = 10;
+// window.a = 10;
 
 window.CLIENT_ID = '455128849558-p20c7pm33dkc4oneirb7cbja8pltp6di.apps.googleusercontent.com';
 window.CALENDAR_ID = 's1510285@ysh.ed.jp';
@@ -73,7 +75,7 @@ function handleAuthResult(authResult) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const store = createStore(reducer)
+    const store = configureStore()
     riot.mixin(rrm(store))
     route.start(true)
     riot.mount('*')

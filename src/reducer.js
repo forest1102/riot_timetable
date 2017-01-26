@@ -4,27 +4,22 @@ import {
 
 import {
     DATA_SAVE,
-    INIT
+    INIT,
+    ASYNC_SAVE,
+    TIMETABLE_LOADED
 } from './actions.js'
-var defaultState = {
-    timetable: []
-}
-for (var i = 0; i < 5; i++) {
-    var obArr = [];
-    for (var j = 0; j < 6; j++) {
-        obArr.push({
-            'teacher': ' ',
-            'place': ' ',
-            'subject': ' ',
-            'day': WEEK[i],
-            'index': j
-        })
-    }
-    defaultState.timetable.push(obArr)
-}
 
-function timeTableReducer(state = defaultState, action) {
+
+function timeTableReducer(state = {
+    timetable: []
+}, action) {
     switch (action.type) {
+        case TIMETABLE_LOADED:
+            // console.log(action.timetable);
+            return {
+                ...state,
+                timetable: action.timetable
+            }
         case DATA_SAVE:
             var dayIndex = WEEKtoINT[action.day]
             var newState = [
@@ -46,6 +41,7 @@ function timeTableReducer(state = defaultState, action) {
             return { ...state,
                 timetable: newState
             }
+
         default:
             return state
 

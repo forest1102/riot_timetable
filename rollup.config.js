@@ -1,10 +1,10 @@
 import riot from 'rollup-plugin-riot'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
-import buble from 'rollup-plugin-buble'
+// import buble from 'rollup-plugin-buble'
 import postcss from 'postcss'
 import postcssCssnext from 'postcss-cssnext'
-// import babel from 'rollup-plugin-babel'
+import babel from 'rollup-plugin-babel'
 
 // import inject from 'rollup-plugin-inject';
 // import replace from 'rollup-plugin-replace'
@@ -25,17 +25,7 @@ export default {
             jsnext: true
         }),
         commonjs(),
-        buble({
-            target: {
-                chrome: 49,
-                node: 4,
-                firefox: 45,
-                safari: 9,
-                edge: 12,
-                ie: 11
-            },
-            objectAssign: 'Object.assign',
-        })
+        babel()
     ],
     format: 'iife'
 }
