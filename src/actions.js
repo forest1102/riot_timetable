@@ -1,7 +1,7 @@
 export const DATA_SAVE = 'DATA_SAVE'
 export const INIT = 'INIT'
 export const ASYNC_SAVE = 'ASYNC_SAVE'
-export const TASK_LOAD = 'TASK_LOAD'
+export const TIMETABLE_LOAD = 'TIMETABLE_LOAD'
 export const TIMETABLE_LOADED = 'TIMETABLE_LOADED'
 window.TAG = ['day', 'week', 'calendar', 'setting'];
 window.WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
@@ -20,7 +20,7 @@ export function dataSave(data) {
 }
 export function taskLoad() {
     return {
-        type: TASK_LOAD
+        type: TIMETABLE_LOAD
     }
 }
 

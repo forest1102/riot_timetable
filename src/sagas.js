@@ -4,7 +4,7 @@ import {
 } from 'redux-saga'
 import {
     ASYNC_SAVE,
-    TASK_LOAD,
+    TIMETABLE_LOAD,
     dataSave,
     timetableLoaded
 } from './actions.js'
@@ -17,14 +17,28 @@ var {
 export function* saveAsync() {
     while (true) {
         const action = yield take(ASYNC_SAVE);
+        const {
+            index,
+            day,
+            subject,
+            teacher,
+            place
+        } = action.data;
         // yield call(delay, 1000);
+        var timetable = JSON.parse(localStorage.getItem("timetable"));
+        timetable[WEEKtoINT[day]][index] = {
+            subject,
+            teacher,
+            place
+        };
+        localStorage.setItem("timetable", JSON.stringify(timetable));
         yield put(dataSave(action.data))
     }
 }
 
 export function* loadTimetable() {
     while (true) {
-        const action = yield take(TASK_LOAD)
+        const action = yield take(TIMETABLE_LOAD)
         // console.log('aaaa');
         if (localStorage.timetable == null) {
             var timetable = getDefaultTimetable();
