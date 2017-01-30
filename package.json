@@ -7,10 +7,12 @@
     "start": "npm run watch & npm run server",
     "build": "rollup -c",
     "watch": "chokidar 'src/**' -c 'npm run build'",
-    "server": "browser-sync start --files 'dist/*, index.html' --server"
+    "server": "browser-sync start --files 'dist/*, index.html' --server --port 8080"
   },
   "dependencies": {
     "es6-promise": "^4.0.5",
+    "fetch-polyfill": "^0.8.2",
+    "immutable": "^3.8.1",
     "marked": "^0.3.6",
     "object-assign": "^4.1.1",
     "path": "^0.12.7",

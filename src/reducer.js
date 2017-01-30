@@ -5,7 +5,6 @@ import {
 import {
     DATA_SAVE,
     INIT,
-    ASYNC_SAVE,
     TIMETABLE_LOADED
 } from './actions.js'
 
@@ -21,17 +20,22 @@ function timeTableReducer(state = {
                 timetable: action.timetable
             }
         case DATA_SAVE:
-            var dayIndex = WEEKtoINT[action.day]
+            var {
+                day,
+                index,
+                subject,
+                teacher,
+                place,
+            } = action.data;
+            var dayIndex = WEEKtoINT[day]
             var newState = [
-                ...state.timetable.slice(0, dayIndex), [...state.timetable[dayIndex].slice(0, action.index), {
-                        ...state.timetable[dayIndex][action.index],
-                        'subject': action.subject,
-                        'teacher': action.teacher,
-                        'place': action.place,
-                        'day': action.day,
-                        'index': action.index
+                ...state.timetable.slice(0, dayIndex), [...state.timetable[dayIndex].slice(0, index), {
+                        ...state.timetable[dayIndex][index],
+                        'subject': subject,
+                        'teacher': teacher,
+                        'place': place
                     },
-                    ...state.timetable[dayIndex].slice(action.index + 1)
+                    ...state.timetable[dayIndex].slice(index + 1)
                 ],
 
                 ...state.timetable.slice(dayIndex + 1)

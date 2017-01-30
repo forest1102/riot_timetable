@@ -15,7 +15,7 @@ window.WEEKtoINT = {
 export function dataSave(data) {
     return {
         type: DATA_SAVE,
-        ...data
+        data: data
     }
 }
 export function taskLoad() {

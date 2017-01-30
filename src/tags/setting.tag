@@ -5,9 +5,10 @@
             <a onclick={clear}>reset</a>
         </div>
         <div class="ui segment">
-            <a id="authorize-button" onclick={authClick}>
-                Authorize access to Google Calendar API
-            </a>
+            <button id="authorize-button" onclick={SignIn}>Authorize</button>
+        </div>
+        <div class="ui segment">
+            <button id="signout-button" onclick={SignOut}>Sign Out</button>
         </div>
     </div>
     <script>
@@ -17,6 +18,12 @@
         this.clear = (e) => {
             localStorage.removeItem('timetable');
             location.reload(true);
+        }
+        this.SignIn = (ev) => {
+            gapi.auth2.getAuthInstance().signIn();
+        }
+        this.SignOut = (ev) => {
+            gapi.auth2.getAuthInstance().signIn();
         }
     </script>
 </setting>

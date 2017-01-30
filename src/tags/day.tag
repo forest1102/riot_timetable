@@ -14,7 +14,7 @@
         </div>
         <div class="ui container app segment">
             <div class="ui one column stackable grid">
-                <panel each={d in this.timetableDay} subject={d.subject} teacher={d.teacher} place={d.place} date={d.day} i={d.index} class="column"></panel>
+                <panel each={d,i in this.timetableDay} subject={d.subject} teacher={d.teacher} place={d.place} date={parent.day} i={i} class="column"></panel>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
             // console.log(a)
             this.date = opts.param[0];
             this.timetableDay = opts.timetable[WEEKtoINT[this.date]]
-            console.log(this.timetableDay, 'by day.tag on mountEvent');
+            // console.log(this.timetableDay, 'by day.tag on mountEvent');
             this.update()
         })
     </script>

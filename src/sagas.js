@@ -8,7 +8,7 @@ import {
     dataSave,
     timetableLoaded
 } from './actions.js'
-var {
+const {
     fork,
     put,
     call,
