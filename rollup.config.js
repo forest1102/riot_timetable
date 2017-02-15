@@ -2,17 +2,24 @@ import riot from 'rollup-plugin-riot'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 // import buble from 'rollup-plugin-buble'
+import globals from 'rollup-plugin-node-globals';
+import builtins from 'rollup-plugin-node-builtins';
 import postcss from 'postcss'
 import postcssCssnext from 'postcss-cssnext'
 import babel from 'rollup-plugin-babel'
-
+// import path from 'path'
+// import moment from 'moment';
 // import inject from 'rollup-plugin-inject';
-// import replace from 'rollup-plugin-replace'
+import replace from 'rollup-plugin-replace'
 
 export default {
     entry: 'src/main.js',
     dest: 'dist/bundle.js',
     plugins: [
+        builtins(),
+        replace({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        }),
         riot({
             style: 'cssnext',
             parsers: {
@@ -24,7 +31,10 @@ export default {
         nodeResolve({
             jsnext: true
         }),
-        commonjs(),
+        commonjs({
+            ignoreGlobal: true
+        }),
+        globals(),
         babel()
     ],
     format: 'iife'

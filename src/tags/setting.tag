@@ -12,6 +12,7 @@
         </div>
     </div>
     <script>
+
         this.authClick = (ev) => {
             // obs.trigger('handleAuth');
         }

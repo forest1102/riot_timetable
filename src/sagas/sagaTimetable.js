@@ -7,13 +7,15 @@ import {
     TIMETABLE_LOAD,
     dataSave,
     timetableLoaded
-} from './actions.js'
+} from '../actions'
+
 const {
     fork,
     put,
     call,
     take
 } = effects;
+
 export function* saveAsync() {
     while (true) {
         const action = yield take(ASYNC_SAVE);
@@ -52,13 +54,8 @@ export function* loadTimetable() {
     }
 }
 
-export default function* rootSaga() {
-    yield fork(loadTimetable)
-    yield fork(saveAsync);
 
-}
-
-export function getDefaultTimetable() {
+function getDefaultTimetable() {
     var timetable = []
     for (var i = 0; i < 5; i++) {
         var obArr = [];

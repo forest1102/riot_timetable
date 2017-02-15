@@ -3,9 +3,11 @@ export const INIT = 'INIT'
 export const ASYNC_SAVE = 'ASYNC_SAVE'
 export const TIMETABLE_LOAD = 'TIMETABLE_LOAD'
 export const TIMETABLE_LOADED = 'TIMETABLE_LOADED'
-window.TAG = ['day', 'week', 'calendar', 'setting'];
-window.WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-window.WEEKtoINT = {
+export const GAPI_ONLOADED = 'GAPI_ONLOADED'
+export const UPDATE_SIGNIN_STATUS = 'UPDATE_SIGNIN_STATUS'
+global.TAG = ['day', 'week', 'calendar', 'setting'];
+global.WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+global.WEEKtoINT = {
     'Mon': 0,
     'Tue': 1,
     'Wed': 2,
@@ -35,5 +37,17 @@ export function asyncLoad(data) {
     return {
         type: ASYNC_SAVE,
         data: data
+    }
+}
+export function googleAPILoaded() {
+    return {
+        type: GAPI_ONLOADED
+    }
+}
+
+export function updateSignInStatus(isSignedIn) {
+    return {
+        type: UPDATE_SIGNIN_STATUS,
+        isSignedIn: isSignedIn
     }
 }

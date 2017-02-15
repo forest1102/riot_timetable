@@ -4,7 +4,6 @@ import {
 
 import {
     DATA_SAVE,
-    INIT,
     TIMETABLE_LOADED
 } from './actions.js'
 
