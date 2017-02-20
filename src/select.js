@@ -11,3 +11,13 @@ export const timetableSelector = createSelector(
         }
     }
 )
+
+export const googleSignedInSelector = createSelector(
+    (state) => state.googleCalendar.isSignedIn,
+    (isSignedIn) => (isSignedIn)
+)
+
+export const googleCalendarSelector = createSelector(
+    (state) => state.googleCalendar.calendarEvents,
+    (calendarEvents) => (calendarEvents)
+)

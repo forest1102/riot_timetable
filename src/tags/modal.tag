@@ -1,4 +1,4 @@
-import {dataSave,asyncLoad} from '../actions'
+import {saveTimetable,sendLocalStorage} from '../actions'
 <modal>
     <div class="ui modal">
         <div class="actions">
@@ -47,12 +47,12 @@ import {dataSave,asyncLoad} from '../actions'
                 place: this.refs.place.value
             }
             // RiotControl.trigger('data_save', data)
-            this.dispatch(asyncLoad(data))
+            this.dispatch(sendLocalStorage(data))
             this.refs.myform.reset();
             // this.update();
             $('.ui.modal').modal('hide');
             // return true;
         }
-        this.dispatchify({dataSave})
+        this.dispatchify({saveTimetable})
     </script>
 </modal>

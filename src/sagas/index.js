@@ -3,7 +3,10 @@ import {
 } from 'redux-saga'
 import {
     clientInit,
-    getSignInStatus
+    signIn,
+    signOut,
+    getCalendarEvents,
+    insertCalendarEvents
 } from './sagaGapi.js'
 import {
     saveAsync,
@@ -18,5 +21,9 @@ export default function* rootSaga() {
     yield fork(loadTimetable)
     yield fork(saveAsync);
     yield fork(clientInit);
-    yield fork(getSignInStatus)
+    yield fork(signIn);
+    yield fork(signOut)
+    yield fork(getCalendarEvents)
+    yield fork(insertCalendarEvents)
+    // yield fork(getSignInStatus)
 }

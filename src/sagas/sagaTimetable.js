@@ -3,9 +3,9 @@ import {
     delay
 } from 'redux-saga'
 import {
-    ASYNC_SAVE,
+    SEND_LOCALSTORAGE,
     TIMETABLE_LOAD,
-    dataSave,
+    saveTimetable,
     timetableLoaded
 } from '../actions'
 
@@ -18,7 +18,7 @@ const {
 
 export function* saveAsync() {
     while (true) {
-        const action = yield take(ASYNC_SAVE);
+        const action = yield take(SEND_LOCALSTORAGE);
         const {
             index,
             day,
@@ -34,7 +34,7 @@ export function* saveAsync() {
             place
         };
         localStorage.setItem("timetable", JSON.stringify(timetable));
-        yield put(dataSave(action.data))
+        yield put(saveTimetable(action.data))
     }
 }
 

@@ -5,14 +5,14 @@
             <a onclick={clear}>reset</a>
         </div>
         <div class="ui segment">
-            <button id="authorize-button" onclick={SignIn}>Authorize</button>
+            <button id="authorize-button" onclick={reqestSignIn}>Authorize</button>
         </div>
         <div class="ui segment">
-            <button id="signout-button" onclick={SignOut}>Sign Out</button>
+            <button id="signout-button" onclick={reqestSignOut}>Sign Out</button>
         </div>
     </div>
     <script>
-
+        import {reqestSignIn, reqestSignOut} from '../actions'
         this.authClick = (ev) => {
             // obs.trigger('handleAuth');
         }
@@ -20,11 +20,6 @@
             localStorage.removeItem('timetable');
             location.reload(true);
         }
-        this.SignIn = (ev) => {
-            gapi.auth2.getAuthInstance().signIn();
-        }
-        this.SignOut = (ev) => {
-            gapi.auth2.getAuthInstance().signIn();
-        }
+        this.dispatchify({reqestSignOut, reqestSignIn})
     </script>
 </setting>

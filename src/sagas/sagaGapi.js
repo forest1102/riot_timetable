@@ -3,98 +3,73 @@ import {
 } from 'redux-saga'
 import {
     GAPI_ONLOADED,
-    UPDATE_SIGNIN_STATUS,
-    updateSignInStatus
+    TOGGLE_SIGNIN_STATUS,
+    REQUEST_SIGNIN,
+    REQUEST_SIGNOUT,
+    REQUEST_CALENDAR_EVENT,
+    REQUEST_INSERT_CALENDAR_EVENT,
+    toggleSignInStatus,
+    saveCalendarEvent,
+    addCalendarEvent
 } from '../actions'
-const CLIENT_ID = '307000142363-e42nhiqersfrg8c28gjifson6vglo1as.apps.googleusercontent.com';
-const CALENDAR_ID = 'primary';
-const API_KEY = 'AIzaSyArAcDWq6wYaLtd7_-reEf0CbC0vLLPIgM';
-const SCOPES = ["https://www.googleapis.com/auth/calendar"];
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+import {
+    loadGapi,
+    googleAuthSignIn,
+    googleAuthSignOut,
+    promiseCalendarEventsList,
+    promiseInsertEvent
+} from './handleGapi'
 const {
     fork,
     put,
     call,
     take
 } = effects;
-
-const loadGapi = () => (new Promise(function(resolve, reject) {
-    gapi.load('client:auth2', () => {
-        gapi.client.init({
-            apiKey: API_KEY,
-            discoveryDocs: DISCOVERY_DOCS,
-            clientId: CLIENT_ID,
-            'scope': SCOPES.join(' '),
-        }).then(
-            () => {
-                // Listen for sign-in state changes.
-                // gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                // Handle the initial sign-in state.
-                // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                resolve(gapi.auth2.getAuthInstance().isSignedIn.get());
-            },
-            () => {
-                reject()
-            });
-    })
-}))
-
 export function* clientInit() {
     while (true) {
         const action = yield take(GAPI_ONLOADED)
         const isSignedIn = yield call(loadGapi);
         // yield call(console.log, loaded);
-        yield put(updateSignInStatus(isSignedIn));
-        // yield put()
+        yield put(toggleSignInStatus(isSignedIn));
     }
 }
 
-export function* getSignInStatus() {
+export function* signIn() {
     while (true) {
-        const action = yield take(UPDATE_SIGNIN_STATUS)
-        if (action.isSignedIn) {
-            yield call(makeApiCall);
-        }
+        const action = yield take(REQUEST_SIGNIN)
+        const result = yield call(googleAuthSignIn);
+        // yield call(console.log, result);
+        yield put(toggleSignInStatus(true))
     }
 }
 
-function makeApiCall() {
-    gapi.client.calendar.events.list({
-        'calendarId': CALENDAR_ID,
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-    }).then(function(resp) {
-        console.log(resp);
-        var events = resp.result.items,
-            len = events.length;
-        console.log('Upcoming events:');
+export function* signOut() {
+    while (true) {
+        const action = yield take(REQUEST_SIGNOUT)
+        const result = yield call(googleAuthSignOut);
+        // yield call(console.log, result);
+        yield put(toggleSignInStatus(false))
+    }
+}
 
-        if (events.length > 0) {
-            for (var i = 0; i < len; i++) {
-                var event = events[i];
-                var when = event.start.dateTime;
-                if (!when) {
-                    when = event.start.date;
-                }
-                console.log(event.summary + ' (' + when + ')')
-            }
+export function* getCalendarEvents() {
+    while (true) {
+        const action = yield take(REQUEST_CALENDAR_EVENT)
+        const resp = yield call(promiseCalendarEventsList)
+        // yield call(console.log, resp)
+        yield put(saveCalendarEvent(resp.result.items))
+    }
+}
+
+export function* insertCalendarEvents() {
+    while (true) {
+        const action = yield take(REQUEST_INSERT_CALENDAR_EVENT)
+        try {
+            const resp = yield call(promiseInsertEvent, action.options)
+            yield call(console.log, resp);
+            yield put(addCalendarEvent(resp.result))
+        } catch (e) {
+            console.error('error:', e.result.error);
         }
-        // return gapi.client.calendar.events.insert({
-        //     'calendarId': CALENDAR_ID,
-        //     'summary': 'hogehoge',
-        //     'location': 'somewhere',
-        //     'id': 'hogehoge11',
-        //     'start': {
-        //         'dateTime': '2017-02-06T09:00:00-07:00'
-        //     },
-        //     'end': {
-        //         'dateTime': '2017-02-06T17:00:00-07:00'
-        //     }
-        // })
-    }, (reason) => {
-        console.log('Error: ' + reason.result.error.message)
-    })
+    }
 }

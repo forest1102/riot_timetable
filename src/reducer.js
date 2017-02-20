@@ -3,8 +3,11 @@ import {
 } from 'redux'
 
 import {
-    DATA_SAVE,
-    TIMETABLE_LOADED
+    SAVE_TIMETABLE,
+    TIMETABLE_LOADED,
+    TOGGLE_SIGNIN_STATUS,
+    SAVE_CALENDAR_EVENT,
+    ADD_CALENDAR_EVENT
 } from './actions.js'
 
 
@@ -18,7 +21,7 @@ function timeTableReducer(state = {
                 ...state,
                 timetable: action.timetable
             }
-        case DATA_SAVE:
+        case SAVE_TIMETABLE:
             var {
                 day,
                 index,
@@ -51,7 +54,37 @@ function timeTableReducer(state = {
     }
 }
 
+function googleCalendarReducer(state = {
+    isSignedIn: false,
+    calendarEvents: []
+}, action) {
+    switch (action.type) {
+        case TOGGLE_SIGNIN_STATUS:
+            return {
+                ...state,
+                isSignedIn: action.isSignedIn
+            }
+        case SAVE_CALENDAR_EVENT:
+            // console.log(action.items);
+            return {
+                ...state,
+                calendarEvents: action.items
+            }
+        case ADD_CALENDAR_EVENT:
+            return {
+                ...state,
+                calendarEvents: [
+                    ...state.calendarEvents,
+                    action.event
+                ]
+            }
+        default:
+            return state;
+    }
+}
+
 const reducer = combineReducers({
-    timetable: timeTableReducer
+    timetable: timeTableReducer,
+    googleCalendar: googleCalendarReducer
 })
 export default reducer;
