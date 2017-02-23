@@ -6,19 +6,19 @@ import {
     googleAPILoaded
 } from './actions'
 import createSagaMiddleware from "redux-saga";
-import createLogger from "redux-logger";
+// import createLogger from "redux-logger";
 import reducer from "./reducer";
 import rootSaga from "./sagas";
-import riot from 'riot'
+import observable from 'riot-observable'
 
 export default function configureStore(initialState) {
-    // const sagaMiddleware = createSagaMiddleware();
+    // const logger = createLogger();
     const sagaMiddleware = createSagaMiddleware();
     const store = createStore(
         reducer,
         applyMiddleware(sagaMiddleware)
     );
-    riot.observable(store);
+    observable(store);
     store.on('google-loaded', () => {
         store.dispatch(googleAPILoaded())
     })

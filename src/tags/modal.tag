@@ -27,7 +27,7 @@ import {saveTimetable,sendLocalStorage} from '../actions'
         </form>
     </div>
     <script>
-        var sub = route.create();
+        import {obs} from '../constants'
         this.day = '';
         obs.on('modal-on', (i, day) => {
             this.day = day;
@@ -38,7 +38,7 @@ import {saveTimetable,sendLocalStorage} from '../actions'
             // this.refs.myform.reset();
         }
         this.submit = (e) => {
-            console.log(this.day);
+            // console.log(this.day);
             let data = {
                 index: this.index,
                 day: this.day,

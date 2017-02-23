@@ -17,14 +17,15 @@
 
     </style>
     <script>
+        import {obs} from '../constants';
         this.on('mount', () => {
             // console.log(opts, ' by panel.tag on mount') this.update()
         }).on('update', () => {
             // console.log(opts, 'by panel.tag on update')
         })
         this.click = (e) => {
-            console.log(opts.i);
-            obs.trigger('modal-on', opts.i, opts.date);
+            // console.log(opts);
+            obs.trigger('modal-on', opts.i, opts.day);
         }
     </script>
 </panel>

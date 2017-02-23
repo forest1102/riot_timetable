@@ -5,21 +5,18 @@
             <a onclick={clear}>reset</a>
         </div>
         <div class="ui segment">
-            <button id="authorize-button" onclick={reqestSignIn}>Authorize</button>
+            <button id="authorize-button" onclick={requestSignIn}>Authorize</button>
         </div>
         <div class="ui segment">
-            <button id="signout-button" onclick={reqestSignOut}>Sign Out</button>
+            <button id="signout-button" onclick={requestSignOut}>Sign Out</button>
         </div>
     </div>
     <script>
-        import {reqestSignIn, reqestSignOut} from '../actions'
-        this.authClick = (ev) => {
-            // obs.trigger('handleAuth');
-        }
+        import {requestSignIn, requestSignOut} from '../actions'
         this.clear = (e) => {
             localStorage.removeItem('timetable');
             location.reload(true);
         }
-        this.dispatchify({reqestSignOut, reqestSignIn})
+        this.dispatchify({requestSignOut, requestSignIn})
     </script>
 </setting>

@@ -1,30 +1,19 @@
 <app>
     <modal></modal>
-    <Header></Header>
-    <!-- <div data-is={curTag} timetable={timetable} param={param}/> -->
+
+    <Header activetag={this.curTag}></Header>
+
     <div id="view"></div>
-    <div id="animation"></div>
-    <!--<navigation class="ui container app segment" />-->
-    <!-- <route id="route"></route> -->
-    <style scoped>
-        /*#view {
-            opacity: 0;
-            transition: 0.5s;
-        }
-        
-        .not-opacity {
-            opacity: 1!important;
-            transition: 0.5s;
-        }*/
-    </style>
 
     <script>
+        import route from 'riot-route';
+        import {TAG} from '../constants'
         import {timetableSelector} from '../select';
-        import {taskLoad} from '../actions'
+        import {requestLoadTimetable} from '../actions'
         this.curTag = '';
         this.param = [];
         this.on('before-mount', () => {
-            this.dispatch(taskLoad())
+            this.dispatch(requestLoadTimetable())
         })
         this.on('update', () => {
             riot.mount('#view', this.curTag, {
@@ -51,11 +40,9 @@
                 timetable: this.timetable,
                 param: this.param
             })
-            riot.update();
+            this.update();
         })
         this.subscribe(timetableSelector)
-
-        // obs.on('navigate-animation', () => {     // riot.route.stop();     console.log('animation!!')     this.animation = true; }); riot.route.start(true); riot.router.use((request, response, next) => { })
     </script>
 
 </app>

@@ -3,11 +3,16 @@ import {
     delay
 } from 'redux-saga'
 import {
-    SEND_LOCALSTORAGE,
-    TIMETABLE_LOAD,
+    sendLocalStorage,
+    requestLoadTimetable,
     saveTimetable,
     timetableLoaded
 } from '../actions'
+
+import {
+    WEEK,
+    WEEKtoINT
+} from '../constants';
 
 const {
     fork,
@@ -18,29 +23,37 @@ const {
 
 export function* saveAsync() {
     while (true) {
-        const action = yield take(SEND_LOCALSTORAGE);
-        const {
-            index,
-            day,
-            subject,
-            teacher,
-            place
-        } = action.data;
-        // yield call(delay, 1000);
-        var timetable = JSON.parse(localStorage.getItem("timetable"));
-        timetable[WEEKtoINT[day]][index] = {
-            subject,
-            teacher,
-            place
-        };
-        localStorage.setItem("timetable", JSON.stringify(timetable));
-        yield put(saveTimetable(action.data))
+        try {
+            const {
+                payload
+            } = yield take(sendLocalStorage);
+            const {
+                index,
+                day,
+                subject,
+                teacher,
+                place
+            } = payload;
+            // yield call(delay, 1000);
+            var timetable = JSON.parse(localStorage.getItem("timetable"));
+            timetable[WEEKtoINT[day]][index] = {
+                subject,
+                teacher,
+                place
+            };
+            localStorage.setItem("timetable", JSON.stringify(timetable));
+            yield put(saveTimetable(payload))
+        } catch (e) {
+            yield call(console.log, e)
+        } finally {
+
+        }
     }
 }
 
 export function* loadTimetable() {
     while (true) {
-        const action = yield take(TIMETABLE_LOAD)
+        yield take(requestLoadTimetable)
         // console.log('aaaa');
         if (localStorage.timetable == null) {
             var timetable = getDefaultTimetable();

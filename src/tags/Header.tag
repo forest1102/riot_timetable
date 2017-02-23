@@ -15,17 +15,9 @@
     <script>
         this.leftMenus = [];
         this.rightMenus = [];
-        var r = route.create();
-        // r('setting', () => {})
-        r((cur) => {
-            this.tagName = cur;
-            // console.log(cur)
-            this.update()
-        })
-
         this.on('update', () => {
+            this.tagName = opts.activetag;
             this.createMenus();
-            // console.log(opts.curtag); this.tagName = opts.curtag; this.update();
         })
         this.clicked = (e) => {
             return true;
@@ -57,7 +49,6 @@
                     href: '#/setting',
                     icon: 'settings',
                     clicked: (e) => {
-                        obs.trigger('navigate-animation');
                         return true;
                     }
                 }
@@ -68,6 +59,5 @@
             this.leftMenus = this.createLeftMenus();
             this.rightMenus = this.createRightMenus();
         }
-        // On route update, update this fragment.
     </script>
 </Header>

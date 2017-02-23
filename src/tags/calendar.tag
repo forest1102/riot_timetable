@@ -3,35 +3,39 @@
     <div class="ui container app segment">
         <h1>Upcoming events:</h1>
         <ul>
-            <li each={event in calendarEvents}>
-                {event.summary} {'('+parent.dispWhen(event.start)+')'}
+            <li each={schedule in schedules}>
+                {schedule.summary} {'('+schedule.when+')'}
             </li>
         </ul>
     </div>
     <button onclick={insertEvent}>insert</button>
     <script>
         import {googleSignedInSelector, googleCalendarSelector} from '../select'
-        import {reqestCalendarEvent, reqestInsertCalendarEvent} from '../actions'
+        import {requestCalendarEvent, requestInsertCalendarEvent} from '../actions'
+        this.schedules = [];
         this.subscribe(googleSignedInSelector, (isSignedIn) => {
             if (isSignedIn) {
-                this.dispatch(reqestCalendarEvent())
+                this.dispatch(requestCalendarEvent())
             }
             // console.log(`sign in status: ${isSignedIn}`);
             this.update({isSignedIn})
         })
         this.subscribe(googleCalendarSelector, (calendarEvents) => {
             // console.log(calendarEvents);
-            this.update({calendarEvents})
+            var schedules = [];
+            for (const event of calendarEvents) {
+                schedules.push({
+                    summary: event.summary,
+                    when: (event.start.dateTime)
+                        ? event.start.dateTime
+                        : event.start.date
+                })
+            }
+            this.update({schedules})
         })
-        this.dispWhen = (when) => {
-            return (when.dateTime)
-                ? when.dateTime
-                : when.date
-        }
-        this.schedule = [];
         this.insertEvent = () => {
             var d = new Date();
-            this.dispatch(reqestInsertCalendarEvent({
+            this.dispatch(requestInsertCalendarEvent({
                 'summary': 'honyarara',
                 'start': {
                     'dateTime': d.toISOString()

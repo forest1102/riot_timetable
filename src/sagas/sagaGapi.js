@@ -2,12 +2,11 @@ import {
     effects
 } from 'redux-saga'
 import {
-    GAPI_ONLOADED,
-    TOGGLE_SIGNIN_STATUS,
-    REQUEST_SIGNIN,
-    REQUEST_SIGNOUT,
-    REQUEST_CALENDAR_EVENT,
-    REQUEST_INSERT_CALENDAR_EVENT,
+    googleAPILoaded,
+    requestSignIn,
+    requestSignOut,
+    requestCalendarEvent,
+    requestInsertCalendarEvent,
     toggleSignInStatus,
     saveCalendarEvent,
     addCalendarEvent
@@ -27,16 +26,20 @@ const {
 } = effects;
 export function* clientInit() {
     while (true) {
-        const action = yield take(GAPI_ONLOADED)
-        const isSignedIn = yield call(loadGapi);
-        // yield call(console.log, loaded);
-        yield put(toggleSignInStatus(isSignedIn));
+        const action = yield take(googleAPILoaded)
+        try {
+            const isSignedIn = yield call(loadGapi);
+            // yield call(console.log, loaded);
+            yield put(toggleSignInStatus(isSignedIn));
+        } catch (err) {
+            yield call(console.error, err)
+        }
     }
 }
 
 export function* signIn() {
     while (true) {
-        const action = yield take(REQUEST_SIGNIN)
+        const action = yield take(requestSignIn)
         const result = yield call(googleAuthSignIn);
         // yield call(console.log, result);
         yield put(toggleSignInStatus(true))
@@ -45,7 +48,7 @@ export function* signIn() {
 
 export function* signOut() {
     while (true) {
-        const action = yield take(REQUEST_SIGNOUT)
+        const action = yield take(requestSignOut)
         const result = yield call(googleAuthSignOut);
         // yield call(console.log, result);
         yield put(toggleSignInStatus(false))
@@ -54,18 +57,20 @@ export function* signOut() {
 
 export function* getCalendarEvents() {
     while (true) {
-        const action = yield take(REQUEST_CALENDAR_EVENT)
+        const action = yield take(requestCalendarEvent)
         const resp = yield call(promiseCalendarEventsList)
-        // yield call(console.log, resp)
+        yield call(console.log, resp)
         yield put(saveCalendarEvent(resp.result.items))
     }
 }
 
 export function* insertCalendarEvents() {
     while (true) {
-        const action = yield take(REQUEST_INSERT_CALENDAR_EVENT)
+        const {
+            payload
+        } = yield take(requestInsertCalendarEvent)
         try {
-            const resp = yield call(promiseInsertEvent, action.options)
+            const resp = yield call(promiseInsertEvent, payload)
             yield call(console.log, resp);
             yield put(addCalendarEvent(resp.result))
         } catch (e) {
