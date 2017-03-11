@@ -1,6 +1,6 @@
 import {
-    saveTimetable,
-    timetableLoaded
+    timetableSave,
+    successTimetableLoaded
 } from '../actions'
 
 import {
@@ -16,13 +16,13 @@ const defaultTimetableState = {
 }
 
 const timeTableReducer = handleActions({
-    [timetableLoaded]: (state, {
+    [successTimetableLoaded]: (state, {
         payload
     }) => ({
         ...state,
         timetable: payload
     }),
-    [saveTimetable]: (state, action) => {
+    [timetableSave]: (state, action) => {
         var {
             day,
             index,

@@ -6,7 +6,7 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v
 const fields = [
     'start', 'end', 'id', 'summary', 'description',
     'location', 'extendedProperties', 'recurrence',
-    'recurringEventId'
+    'recurringEventId', 'sequence'
 ].join(',')
 // console.log(localStorage);
 export const loadGapi = () => (new Promise(function(resolve, reject) {
@@ -32,9 +32,7 @@ export const loadGapi = () => (new Promise(function(resolve, reject) {
 
 export const googleAuthSignIn = () => (gapi.auth2.getAuthInstance().signIn())
 export const googleAuthSignOut = () => (gapi.auth2.getAuthInstance().signOut())
-export const promiseCalendarEventsList = (options = {
-    'timeMin': (new Date()).toISOString()
-}) => (gapi.client.calendar.events.list({
+export const promiseCalendarEventsList = (options = {}) => (gapi.client.calendar.events.list({
     'calendarId': CALENDAR_ID,
     'fields': `items(${fields})`,
     ...options

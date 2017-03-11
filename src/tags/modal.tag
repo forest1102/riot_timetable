@@ -1,4 +1,4 @@
-import {saveTimetable,sendLocalStorage} from '../actions'
+import {timetableSave,sendLocalStorage} from '../actions'
 <modal>
     <div class="ui modal">
         <div class="actions">
@@ -53,6 +53,6 @@ import {saveTimetable,sendLocalStorage} from '../actions'
             $('.ui.modal').modal('hide');
             // return true;
         }
-        this.dispatchify({saveTimetable})
+        this.dispatchify({timetableSave})
     </script>
 </modal>

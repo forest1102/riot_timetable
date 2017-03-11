@@ -4,9 +4,9 @@ import {
 } from 'redux-saga'
 import {
     sendLocalStorage,
-    requestLoadTimetable,
-    saveTimetable,
-    timetableLoaded
+    requestTimetableLoad,
+    timetableSave,
+    successTimetableLoaded
 } from '../actions'
 
 import {
@@ -42,7 +42,7 @@ export function* saveAsync() {
                 place
             };
             localStorage.setItem("timetable", JSON.stringify(timetable));
-            yield put(saveTimetable(payload))
+            yield put(timetableSave(payload))
         } catch (e) {
             yield call(console.log, e)
         } finally {
@@ -53,16 +53,16 @@ export function* saveAsync() {
 
 export function* loadTimetable() {
     while (true) {
-        yield take(requestLoadTimetable)
+        yield take(requestTimetableLoad)
         // console.log('aaaa');
         if (localStorage.timetable == null) {
             var timetable = getDefaultTimetable();
             console.log(timetable);
             localStorage.setItem("timetable", JSON.stringify(timetable));
-            yield put(timetableLoaded(timetable))
+            yield put(successTimetableLoaded(timetable))
         } else {
             var timetable = JSON.parse(localStorage.getItem("timetable"));
-            yield put(timetableLoaded(timetable));
+            yield put(successTimetableLoaded(timetable));
         }
     }
 }

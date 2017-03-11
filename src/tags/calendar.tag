@@ -13,6 +13,7 @@
         import {googleSignedInSelector, googleCalendarSelector} from '../select'
         import {requestCalendarEvent, requestInsertCalendarEvent} from '../actions'
         this.schedules = [];
+        this.num = 0;
         this.subscribe(googleSignedInSelector, (isSignedIn) => {
             if (isSignedIn) {
                 this.dispatch(requestCalendarEvent())
@@ -42,6 +43,11 @@
                 },
                 'end': {
                     'dateTime': (new Date(d.setHours(d.getHours() + 2))).toISOString()
+                },
+                'extendedProperties': {
+                    'shared': {
+                        'hogehoge': this.num++
+                    }
                 }
             }))
         }

@@ -1,14 +1,15 @@
 import {
-    createAction
+    createAction,
+    createActions
 } from 'redux-actions'
 
-export const saveTimetable = createAction('TIMETABLE_SAVE', data => data)
-
-export const requestLoadTimetable = createAction('REQUEST_TIMETABLE_LOAD')
-
-export const timetableLoaded = createAction('TIMETABLE_LOADED', timetable => timetable)
-
-export const sendLocalStorage = createAction('SEND_LOCALSTORAGE', data => data)
+export const {
+    timetableSave,
+    requestTimetableLoad,
+    successTimetableLoaded,
+    sendLocalStorage
+} = createActions('TIMETABLE_SAVE', 'REQUEST_TIMETABLE_LOAD',
+    'SUCCESS_TIMETABLE_LOADED', 'SEND_LOCAL_STORAGE')
 
 export const googleAPILoaded = createAction('GOOGLE_API_LOADED')
 
@@ -25,3 +26,5 @@ export const saveCalendarEvent = createAction('SAVE_CALENDAR_EVENT', items => it
 export const requestInsertCalendarEvent = createAction('REQUEST_INSERT_CALENDAR_EVENT', options => options)
 
 export const addCalendarEvent = createAction('ADD_CALENDAR_EVENT', event => event)
+
+export const prepareGoogle = createAction('PRERARE_GOOGLE');

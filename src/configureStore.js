@@ -2,11 +2,11 @@ import {
     createStore,
     applyMiddleware
 } from "redux";
+import createSagaMiddleware from "redux-saga";
+// import createLogger from "redux-logger";
 import {
     googleAPILoaded
 } from './actions'
-import createSagaMiddleware from "redux-saga";
-// import createLogger from "redux-logger";
 import reducer from "./reducer";
 import rootSaga from "./sagas";
 import observable from 'riot-observable'

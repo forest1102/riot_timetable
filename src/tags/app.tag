@@ -9,11 +9,11 @@
         import route from 'riot-route';
         import {TAG} from '../constants'
         import {timetableSelector} from '../select';
-        import {requestLoadTimetable} from '../actions'
+        import {requestTimetableLoad} from '../actions'
         this.curTag = '';
         this.param = [];
         this.on('before-mount', () => {
-            this.dispatch(requestLoadTimetable())
+            this.dispatch(requestTimetableLoad())
         })
         this.on('update', () => {
             riot.mount('#view', this.curTag, {
