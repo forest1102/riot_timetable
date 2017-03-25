@@ -1,11 +1,13 @@
 import {
     combineReducers
 } from 'redux'
-import googleCalendarReducer from './googleCalendarReducer.js'
-import timeTableReducer from './timetableReducer.js';
+import googleCalendar from './googleCalendarReducer.js'
+import timetable from './timetableReducer.js';
+import classHour from './classHourReducer.js'
 
 const reducer = combineReducers({
-    timetable: timeTableReducer,
-    googleCalendar: googleCalendarReducer
+    timetable,
+    googleCalendar,
+    classHour
 })
 export default reducer;

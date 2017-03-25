@@ -8,26 +8,12 @@ const fields = [
     'location', 'extendedProperties', 'recurrence',
     'recurringEventId', 'sequence'
 ].join(',')
-// console.log(localStorage);
-export const loadGapi = () => (new Promise(function(resolve, reject) {
-    gapi.load('client:auth2', () => {
-        gapi.client.init({
-            apiKey: API_KEY,
-            discoveryDocs: DISCOVERY_DOCS,
-            clientId: CLIENT_ID,
-            'scope': SCOPES.join(' '),
-        }).then(
-            () => {
-                // Listen for sign-in state changes.
-                // gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                // Handle the initial sign-in state.
-                // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                resolve(gapi.auth2.getAuthInstance().isSignedIn.get());
-            },
-            () => {
-                reject()
-            });
-    })
+
+export const promiseClientInit = () => (window.gapi.client.init({
+    apiKey: API_KEY,
+    discoveryDocs: DISCOVERY_DOCS,
+    clientId: CLIENT_ID,
+    'scope': SCOPES.join(' ')
 }))
 
 export const googleAuthSignIn = () => (gapi.auth2.getAuthInstance().signIn())
@@ -40,6 +26,14 @@ export const promiseCalendarEventsList = (options = {}) => (gapi.client.calendar
 
 export const promiseInsertEvent = (options) => (
     gapi.client.calendar.events.insert({
+        'calendarId': CALENDAR_ID,
+        'fields': fields,
+        ...options
+    })
+)
+
+export const promisePatchEvent = (options) => (
+    gapi.client.calendar.events.patch({
         'calendarId': CALENDAR_ID,
         'fields': fields,
         ...options

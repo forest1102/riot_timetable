@@ -1,7 +1,8 @@
 import {
-    toggleSignInStatus,
     saveCalendarEvent,
-    addCalendarEvent
+    addCalendarEvent,
+    successGoogleSignIn,
+    successGoogleSignOut
 } from '../actions'
 import {
     handleActions
@@ -13,10 +14,6 @@ const defaultGoogleCalendarReducer = {
 }
 
 const googleCalendarReducer = handleActions({
-    [toggleSignInStatus]: (state, action) => ({
-        ...state,
-        isSignedIn: action.payload
-    }),
     [saveCalendarEvent]: (state, action) => ({
         ...state,
         calendarEvents: action.payload
@@ -27,6 +24,14 @@ const googleCalendarReducer = handleActions({
             ...state.calendarEvents,
             action.payload
         ]
+    }),
+    [successGoogleSignIn]: (state, action) => ({
+        ...state,
+        isSignedIn: true
+    }),
+    [successGoogleSignOut]: (state, action) => ({
+        ...state,
+        isSignedIn: false
     })
 }, defaultGoogleCalendarReducer)
 

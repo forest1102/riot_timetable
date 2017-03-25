@@ -2,23 +2,38 @@ import {
     effects
 } from 'redux-saga'
 import {
-    googleAPILoaded,
+    googleApiLoaded,
     requestSignIn,
     requestSignOut,
     requestCalendarEvent,
     requestInsertCalendarEvent,
-    toggleSignInStatus,
     saveCalendarEvent,
     addCalendarEvent,
-    prepareGoogle
+    prepareGoogle,
+    successPrepareGoogle,
+    successGoogleSignIn,
+    successGoogleSignOut,
+    requestPatchCalendarEvent,
+    requestTimetableLoad,
+    successTimetableLoaded
 } from '../actions'
 import {
-    loadGapi,
-    googleAuthSignIn,
-    googleAuthSignOut,
     promiseCalendarEventsList,
-    promiseInsertEvent
+    promiseInsertEvent,
+    promiseClientInit,
+    promisePatchEvent,
+    googleAuthSignIn,
+    googleAuthSignOut
 } from './handleGapi'
+
+import {
+    getDefaultTimetable
+} from './sagaTimetable'
+
+import {
+    WEEKtoINT
+} from '../constants'
+
 import {
     googleSignedInSelector
 } from '../select'
@@ -27,23 +42,16 @@ const {
     put,
     call,
     take,
-    select
+    select,
+    cancel,
+    takeLatest
 } = effects;
-const CLIENT_ID = '307000142363-e42nhiqersfrg8c28gjifson6vglo1as.apps.googleusercontent.com';
-const CALENDAR_ID = 'primary';
-const API_KEY = 'AIzaSyArAcDWq6wYaLtd7_-reEf0CbC0vLLPIgM';
-const SCOPES = ["https://www.googleapis.com/auth/calendar"];
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-const fields = [
-    'start', 'end', 'id', 'summary', 'description',
-    'location', 'extendedProperties', 'recurrence',
-    'recurringEventId', 'sequence'
-].join(',')
+
 export const promises = {
     loadGoogleAuth2: () => new Promise(function(resolve, reject) {
-        window.gapi.load('auth2', resolve)
+        window.gapi.load('client:auth2', resolve)
     }),
-    loadScript: () => new Promise(function(resolve, reject) {
+    loadScript: (src) => new Promise(function(resolve, reject) {
         const js = document.createElement('script')
         js.src = src
         js.onload = resolve
@@ -51,48 +59,24 @@ export const promises = {
         document.body.appendChild(js)
     })
 }
-export function* clientInit() {
-    while (true) {
-        const action = yield take(googleAPILoaded)
-        try {
-            const isSignedIn = yield call(loadGapi);
-            // yield call(console.log, loaded);
-            yield put(toggleSignInStatus(isSignedIn));
-        } catch (err) {
-            yield call(console.error, err)
-        }
-    }
-}
-
-export function* signIn() {
-    while (true) {
-        try {
-            const action = yield take(requestSignIn)
-            yield call(googleAuthSignIn)
-            yield put(toggleSignInStatus(true))
-        } catch (e) {
-
-        } finally {
-
-        }
-    }
-}
-
-export function* signOut() {
-    while (true) {
-        const action = yield take(requestSignOut)
-        const result = yield call(googleAuthSignOut);
-        // yield call(console.log, result);
-        yield put(toggleSignInStatus(false))
-    }
-}
 
 export function* getCalendarEvents() {
     while (true) {
-        const action = yield take(requestCalendarEvent)
-        const resp = yield call(promiseCalendarEventsList)
-        yield call(console.log, resp)
-        yield put(saveCalendarEvent(resp.result.items))
+        // console.log(requestCalendarEvent);
+        const {
+            payload
+        } = yield take(requestCalendarEvent)
+        const isSignedIn = yield select(googleSignedInSelector);
+        if (!isSignedIn) return
+        try {
+            const resp = yield call(promiseCalendarEventsList, payload)
+            // console.log(resp.result.items);
+            yield put(saveCalendarEvent(resp.result.items))
+        } catch (e) {
+            console.log(e);
+        } finally {
+
+        }
     }
 }
 
@@ -102,43 +86,133 @@ export function* insertCalendarEvents() {
             payload
         } = yield take(requestInsertCalendarEvent)
         const isSignedIn = yield select(googleSignedInSelector);
-        if (isSignedIn) {
-            try {
-                const resp = yield call(promiseInsertEvent, payload)
-                yield call(console.log, resp);
-                yield put(addCalendarEvent(resp.result))
-            } catch (e) {
-                console.error('error:', e.result.error);
-            }
+        if (!isSignedIn) return
+        try {
+            const resp = yield call(promiseInsertEvent, payload)
+            yield call(console.log, resp);
+            yield put(addCalendarEvent(resp.result))
+        } catch (e) {
+            console.error('error:', e.result.error);
         }
     }
 }
 
-export function* pGoogle() {
-    yield call(promises.loadScript, 'https://apis.google.com/js/api.js')
-    yield call(promises.loadGoogleAuth2)
-    yield call(window.gapi.auth2.init, {
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOCS,
-        clientId: CLIENT_ID,
-        'scope': SCOPES.join(' ')
-    })
+export function* patchCalendarEvent() {
+    while (true) {
+        const {
+            payload
+        } = yield take(requestPatchCalendarEvent)
+        const isSignedIn = yield select(googleSignedInSelector);
+        if (!isSignedIn) return
+        try {
+            const resp = yield call(promisePatchEvent, payload)
+            yield call(console.log, resp);
+            // yield put(addCalendarEvent(resp.result))
+        } catch (e) {
+            console.error('error:', e);
+        }
+    }
 }
 
-export function* watchLoginGoogle() {
+export function* timetableLoadFromCalendar() {
+    // yield take(requestTimetableLoad)
+    const isSignedIn = yield select(googleSignedInSelector);
+    if (!isSignedIn) yield take(successGoogleSignIn)
     try {
-        yield take(prepareGoogle);
-        yield call(pGoogle);
-        yield fork(signIn)
+        const {
+            result: {
+                items: events
+            }
+        } = yield call(promiseCalendarEventsList, {
+            showDeleted: true,
+            privateExtendedProperty: ['timetableEvent=true']
+        })
+        console.log(events);
+        var timetables = getDefaultTimetable()
+        for (const {
+                extendedProperties: {
+                    private: meta,
+                    shared: eData
+                }
+            } of events) {
+            if (meta.recurringEvent === 'true')
+                timetables[WEEKtoINT[meta.day]][meta.index] = eData
+        }
+        console.log(timetables);
+        yield put(successTimetableLoaded(timetables));
     } catch (e) {
+        console.error(e);
+    } finally {
 
     }
 }
 
+function* pGoogle() {
+    yield take(prepareGoogle)
+    try {
+        yield call(promises.loadScript, 'https://apis.google.com/js/api.js')
+        yield call(promises.loadGoogleAuth2)
+        yield call(promiseClientInit)
+        const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
+        // console.log(isSignedIn);
+        if (isSignedIn) {
+            yield put(successGoogleSignIn())
+        }
+        // yield put(successPrepareGoogle())
+    } catch (e) {
+        console.log(e);
+    } finally {
+
+    }
+}
+
+export function* googleSignIn() {
+    try {
+        yield call(googleAuthSignIn)
+        yield put(successGoogleSignIn())
+    } catch (e) {
+        console.error(e);
+    } finally {
+
+    }
+}
+
+export function* googleSignOut() {
+    try {
+        yield call(googleAuthSignOut)
+        yield put(successGoogleSignOut())
+    } catch (e) {
+        console.error(e);
+    } finally {
+
+    }
+}
+
+
+export function* loginFlow() {
+    while (true) {
+        try {
+            yield take(requestSignIn)
+            yield call(googleSignIn)
+            yield take(requestSignOut)
+            yield call(googleSignOut)
+        } catch (e) {
+            console.log(e);
+        } finally {
+
+        }
+    }
+}
+
 export default function*() {
-    yield fork(clientInit);
-    yield fork(signIn);
-    yield fork(signOut)
-    yield fork(getCalendarEvents)
-    yield fork(insertCalendarEvents)
+    // yield call(pGoogle)
+    yield fork(pGoogle)
+    // yield take(successPrepareGoogle)
+    yield [
+        fork(loginFlow),
+        fork(insertCalendarEvents),
+        fork(getCalendarEvents),
+        fork(patchCalendarEvent),
+        takeLatest(requestTimetableLoad, timetableLoadFromCalendar)
+    ]
 }

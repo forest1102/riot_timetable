@@ -1,4 +1,3 @@
-import {timetableSave,sendLocalStorage} from '../actions'
 <modal>
     <div class="ui modal">
         <div class="actions">
@@ -6,7 +5,7 @@ import {timetableSave,sendLocalStorage} from '../actions'
                 <i class="remove icon"></i>
             </div>
         </div>
-        <form action="" class="ui form" ref="myform" onsubmit={submit}>
+        <form action="" class="ui form" ref="myform">
             <div class="field">
                 <label>教科名</label>
                 <input type="text" placeholder="subject" ref="subject">
@@ -20,7 +19,7 @@ import {timetableSave,sendLocalStorage} from '../actions'
                 <input type="text" placeholder="place" ref="place">
             </div>
             <div class="field">
-                <button class="ui positive button" type="submit" href="">
+                <button class="ui positive button" type="submit" onclick={submit}>
                     SAVE
                 </button>
             </div>
@@ -28,6 +27,7 @@ import {timetableSave,sendLocalStorage} from '../actions'
     </div>
     <script>
         import {obs} from '../constants'
+        import {timetableSave, sendLocalStorage, timetableSendToGoogleCalendar} from '../actions'
         this.day = '';
         obs.on('modal-on', (i, day) => {
             this.day = day;
@@ -35,7 +35,7 @@ import {timetableSave,sendLocalStorage} from '../actions'
             $('.ui.modal').modal('show');
         })
         this.cancel = (e) => {
-            // this.refs.myform.reset();
+            this.refs.myform.reset();
         }
         this.submit = (e) => {
             // console.log(this.day);
@@ -47,11 +47,10 @@ import {timetableSave,sendLocalStorage} from '../actions'
                 place: this.refs.place.value
             }
             // RiotControl.trigger('data_save', data)
-            this.dispatch(sendLocalStorage(data))
-            this.refs.myform.reset();
-            // this.update();
+            this.dispatch(timetableSave(data))
+            this.refs.myform.reset()
             $('.ui.modal').modal('hide');
-            // return true;
+            return false;
         }
         this.dispatchify({timetableSave})
     </script>

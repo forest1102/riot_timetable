@@ -8,21 +8,15 @@
             </li>
         </ul>
     </div>
-    <button onclick={insertEvent}>insert</button>
+    <!-- <button onclick={insertEvent}>insert</button> -->
     <script>
-        import {googleSignedInSelector, googleCalendarSelector} from '../select'
+        import {googleSignedInSelector, googleCalendarSelector, classHourSelector} from '../select'
         import {requestCalendarEvent, requestInsertCalendarEvent} from '../actions'
         this.schedules = [];
         this.num = 0;
-        this.subscribe(googleSignedInSelector, (isSignedIn) => {
-            if (isSignedIn) {
-                this.dispatch(requestCalendarEvent())
-            }
-            // console.log(`sign in status: ${isSignedIn}`);
-            this.update({isSignedIn})
-        })
+        this.classHour = [{}]
         this.subscribe(googleCalendarSelector, (calendarEvents) => {
-            // console.log(calendarEvents);
+            console.log(calendarEvents);
             var schedules = [];
             for (const event of calendarEvents) {
                 schedules.push({
@@ -34,22 +28,6 @@
             }
             this.update({schedules})
         })
-        this.insertEvent = () => {
-            var d = new Date();
-            this.dispatch(requestInsertCalendarEvent({
-                'summary': 'honyarara',
-                'start': {
-                    'dateTime': d.toISOString()
-                },
-                'end': {
-                    'dateTime': (new Date(d.setHours(d.getHours() + 2))).toISOString()
-                },
-                'extendedProperties': {
-                    'shared': {
-                        'hogehoge': this.num++
-                    }
-                }
-            }))
-        }
+        this.subscribe(classHourSelector, (classHour) => this.update({classHour}))
     </script>
 </calendar>

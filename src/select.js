@@ -21,3 +21,8 @@ export const googleCalendarSelector = createSelector(
     (state) => state.googleCalendar.calendarEvents,
     (calendarEvents) => (calendarEvents)
 )
+
+export const classHourSelector = createSelector(
+    (state) => state.classHour,
+    (classHour) => (classHour)
+)
